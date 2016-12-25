@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+
+<!--This is a comment-->
+
+<?test pi?>
+
+<list>
+    <text id="1"><![CDATA[Hello, world!]]></text>
+    <text id="2">The quick brown fox jumps over the lazy dog.</text>
+    <text id="3">I can eat glass, it doesn&apos;t hurt me.</text>
+</list>
