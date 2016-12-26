@@ -140,7 +140,7 @@ public:
     T& getFirst() { return *first; }
     T& getLast() { return *last; }
     
-    bool empty() { return !first; }
+    bool empty() const { return !first; }
     
     Iterator begin() { return Iterator(this, first); }
     Iterator end() { return Iterator(this, nullptr); }
