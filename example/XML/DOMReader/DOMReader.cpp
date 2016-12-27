@@ -23,7 +23,7 @@
  * SOFTWARE.
  *
  */
- 
+
 #include <exception>
 #include <fstream>
 #include <iostream>

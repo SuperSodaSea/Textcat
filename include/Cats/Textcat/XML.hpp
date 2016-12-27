@@ -23,7 +23,7 @@
  * SOFTWARE.
  *
  */
- 
+
 #ifndef CATS_TEXTCAT_XML_HPP
 #define CATS_TEXTCAT_XML_HPP
 

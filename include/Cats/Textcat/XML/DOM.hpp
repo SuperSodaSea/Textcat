@@ -36,6 +36,7 @@
 
 #include "Cats/Corecat/MemoryPool.hpp"
 #include "Cats/Corecat/Stream.hpp"
+#include "Cats/Corecat/String.hpp"
 
 #include "Handler.hpp"
 #include "Parser.hpp"
@@ -149,27 +150,6 @@ public:
 
 }
 
-class String {
-    
-private:
-    
-    const char* data;
-    std::size_t length;
-    
-public:
-    
-    String() = default;
-    String(const char* data_) : data(data_), length(std::strlen(data_)) {}
-    String(const char* data_, std::size_t length_) : data(data_), length(length_) {}
-    String(const String& src) : data(src.data), length(src.length) {}
-    
-    const char* getData() { return data; }
-    std::size_t getLength() { return length; }
-    void set(const char* data_) { assert(data); set(data_, std::strlen(data_)); }
-    void set(const char* data_, std::size_t length_) { data = data_; length = length_; }
-    
-};
-
 enum class Type : uint16_t {
     
     Element,
@@ -211,18 +191,20 @@ class Attribute : public Impl::List<Attribute>::ListElement {
     
 private:
     
-    String name;
-    String value;
+    Corecat::StringView name;
+    Corecat::StringView value;
     
 public:
     
     Attribute() : Impl::List<Attribute>::ListElement(), name(), value() {}
-    Attribute(const String& name_, const String& value_) :
+    Attribute(Corecat::StringView name_, Corecat::StringView value_) :
         Impl::List<Attribute>::ListElement(), name(name_), value(value_) {}
     Attribute(const Attribute& src) = delete;
     
-    String& getName() { return name; }
-    String& getValue() { return value; }
+    Corecat::StringView getName() const { return name; }
+    void setName(Corecat::StringView name_) { name = name_; }
+    Corecat::StringView getValue() const { return value; }
+    void setValue(Corecat::StringView value_) { value = value_; }
 
 };
 
@@ -231,21 +213,23 @@ class Element : public Node {
 private:
     
     Impl::List<Attribute> listAttr;
-    String name;
+    Corecat::StringView name;
     
 public:
     
     Element() : Node(Type::Element), listAttr(), name() {}
-    Element(const String& name_) : Node(Type::Element), listAttr(), name(name_) {}
+    Element(Corecat::StringView name_) : Node(Type::Element), listAttr(), name(name_) {}
     Element(const Element& src) = delete;
     
     Impl::List<Attribute>& attribute() { return listAttr; }
+    
+    Corecat::StringView getName() const { return name; }
+    void setName(Corecat::StringView name_) { name = name_; }
     
     Attribute& getFirstAttribute() { return listAttr.getFirst(); }
     Attribute& getLastAttribute() { return listAttr.getLast(); }
     Attribute& appendAttribute(Attribute& attr) { return listAttr.append(*this, attr); }
     Attribute& removeAttribute(Attribute& attr) { return listAttr.remove(attr); }
-    String& getName() { return name; }
     
 };
 
@@ -253,15 +237,16 @@ class Text : public Node {
     
 private:
     
-    String value;
+    Corecat::StringView value;
     
 public:
     
     Text() : Node(Type::Text), value() {}
-    Text(const String& value_) : Node(Type::Text), value(value_) {}
+    Text(Corecat::StringView value_) : Node(Type::Text), value(value_) {}
     Text(const Text& src) = delete;
     
-    String& getValue() { return value; }
+    Corecat::StringView getValue() const { return value; }
+    void setValue(Corecat::StringView value_) { value = value_; }
     
 };
 
@@ -269,15 +254,16 @@ class CDATA : public Node {
     
 private:
     
-    String value;
+    Corecat::StringView value;
     
 public:
     
     CDATA() : Node(Type::CDATA), value() {}
-    CDATA(const String& value_) : Node(Type::CDATA), value(value_) {}
+    CDATA(Corecat::StringView value_) : Node(Type::CDATA), value(value_) {}
     CDATA(const CDATA& src) = delete;
     
-    String& getValue() { return value; }
+    Corecat::StringView getValue() const { return value; }
+    void setValue(Corecat::StringView value_) { value = value_; }
     
 };
 
@@ -285,15 +271,16 @@ class Comment : public Node {
     
 private:
     
-    String value;
+    Corecat::StringView value;
     
 public:
     
     Comment() : Node(Type::Comment), value() {}
-    Comment(const String& value_) : Node(Type::Comment), value(value_) {}
+    Comment(Corecat::StringView value_) : Node(Type::Comment), value(value_) {}
     Comment(const Comment& src) = delete;
     
-    String& getValue() { return value; }
+    Corecat::StringView getValue() const { return value; }
+    void setValue(Corecat::StringView value_) { value = value_; }
     
 };
 
@@ -301,18 +288,20 @@ class ProcessingInstruction : public Node {
     
 private:
     
-    String name;
-    String value;
+    Corecat::StringView name;
+    Corecat::StringView value;
     
 public:
     
     ProcessingInstruction() : Node(Type::ProcessingInstruction), name(), value() {};
-    ProcessingInstruction(const String& name_, const String& value_) :
+    ProcessingInstruction(Corecat::StringView& name_, Corecat::StringView& value_) :
         Node(Type::ProcessingInstruction), name(name_), value(value_) {}
     ProcessingInstruction(const ProcessingInstruction& src) = delete;
     
-    String& getName() { return name; }
-    String& getValue() { return value; }
+    Corecat::StringView getName() const { return name; }
+    void setName(Corecat::StringView name_) { name = name_; }
+    Corecat::StringView getValue() const { return value; }
+    void setValue(Corecat::StringView value_) { value = value_; }
     
 };
 
@@ -327,32 +316,32 @@ public:
     Document() : Node(Type::Document), memoryPool() {}
     Document(const Document& src) = delete;
     
-    Element& createElement(const String& name) {
+    Element& createElement(Corecat::StringView name) {
         
         return *new(memoryPool.allocate(sizeof(Element))) Element(name);
         
     }
-    Attribute& createAttribute(const String& name, const String& value) {
+    Attribute& createAttribute(Corecat::StringView name, Corecat::StringView value) {
         
         return *new(memoryPool.allocate(sizeof(Attribute))) Attribute(name, value);
         
     }
-    Text& createText(const String& value) {
+    Text& createText(Corecat::StringView value) {
         
         return *new(memoryPool.allocate(sizeof(Text))) Text(value);
         
     }
-    CDATA& createCDATA(const String& value) {
+    CDATA& createCDATA(Corecat::StringView value) {
         
         return *new(memoryPool.allocate(sizeof(CDATA))) CDATA(value);
         
     }
-    Comment& createComment(const String& value) {
+    Comment& createComment(Corecat::StringView value) {
         
         return *new(memoryPool.allocate(sizeof(Comment))) Comment(value);
         
     }
-    ProcessingInstruction& createProcessingInstruction(const String& name, const String& value) {
+    ProcessingInstruction& createProcessingInstruction(Corecat::StringView name, Corecat::StringView value) {
         
         return *new(memoryPool.allocate(sizeof(ProcessingInstruction))) ProcessingInstruction(name, value);
         
@@ -445,8 +434,8 @@ public:
                     serializer.startElement(element.getName().getData(), element.getName().getLength());
                     for(auto& attr : element.attribute()) {
                         
-                        auto& name = attr.getName();
-                        auto& value = attr.getValue();
+                        auto name = attr.getName();
+                        auto value = attr.getValue();
                         serializer.attribute(name.getData(), name.getLength(), value.getData(), value.getLength());
                         
                     }
@@ -459,7 +448,7 @@ public:
                 case Type::Text: {
                     
                     auto& text = static_cast<Text&>(*cur);
-                    auto& value = text.getValue();
+                    auto value = text.getValue();
                     serializer.text(value.getData(), value.getLength());
                     break;
                     
@@ -467,7 +456,7 @@ public:
                 case Type::CDATA: {
                     
                     auto& cdata = static_cast<CDATA&>(*cur);
-                    auto& value = cdata.getValue();
+                    auto value = cdata.getValue();
                     serializer.cdata(value.getData(), value.getLength());
                     break;
                     
@@ -475,7 +464,7 @@ public:
                 case Type::Comment: {
                     
                     auto& comment = static_cast<Comment&>(*cur);
-                    auto& value = comment.getValue();
+                    auto value = comment.getValue();
                     serializer.comment(value.getData(), value.getLength());
                     break;
                     
@@ -483,8 +472,8 @@ public:
                 case Type::ProcessingInstruction: {
                     
                     auto& pi = static_cast<ProcessingInstruction&>(*cur);
-                    auto& name = pi.getName();
-                    auto& value = pi.getValue();
+                    auto name = pi.getName();
+                    auto value = pi.getValue();
                     serializer.processingInstruction(name.getData(), name.getLength(), value.getData(), value.getLength());
                     break;
                     
@@ -496,7 +485,7 @@ public:
                     
                     cur = cur->parent;
                     if(cur == this) break;
-                    auto& name = static_cast<Element*>(cur)->getName();
+                    auto name = static_cast<Element*>(cur)->getName();
                     serializer.endElement(name.getData(), name.getLength());
                     
                 }
