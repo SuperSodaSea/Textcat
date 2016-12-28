@@ -29,8 +29,10 @@
 #include <stdexcept>
 #include <vector>
 
+#include "Cats/Corecat/String.hpp"
 #include "Cats/Textcat/XML.hpp"
 
+using namespace Cats::Corecat;
 using namespace Cats::Textcat;
 
 class Handler : public XML::HandlerBase {
@@ -47,12 +49,12 @@ public:
     
     void startDocument() { level = 0; std::cout << "startDocument()\n"; }
     void endDocument() { std::cout << "endDocument()\n"; }
-    void startElement(const char* name, size_t /*nameLength*/) {
+    void startElement(StringView name) {
         
         indent(); std::cout << "startElement(\"" << name << "\")\n"; ++level;
         
     }
-    void endElement(const char* name, size_t /*nameLength*/) {
+    void endElement(StringView name) {
         
         --level; indent(); std::cout << "endElement(\"" << name << "\")\n";
         
@@ -63,27 +65,27 @@ public:
         
     }
     void doctype() { indent(); std::cout << "doctype()\n"; }
-    void attribute(const char* name, size_t /*nameLength*/, const char* value, size_t /*valueLength*/) {
+    void attribute(StringView name, StringView value) {
         
         indent(); std::cout << "attribute(\"" << name << "\", \"" << value << "\")\n";
         
     }
-    void text(const char* value, size_t /*valueLength*/) {
+    void text(StringView value) {
         
         indent(); std::cout << "text(\"" << value << "\")\n";
         
     }
-    void cdata(const char* value, size_t /*valueLength*/) {
+    void cdata(StringView value) {
         
         indent(); std::cout << "cdata(\"" << value << "\")\n";
         
     }
-    void comment(const char* value, size_t /*valueLength*/) {
+    void comment(StringView value) {
         
         indent(); std::cout << "comment(\"" << value << "\")\n";
         
     }
-    void processingInstruction(const char* name, size_t /*nameLength*/, const char* value, size_t /*valueLength*/) {
+    void processingInstruction(StringView name, StringView value) {
         
         indent(); std::cout << "processingInstruction(\"" << name << "\", \"" << value << "\")\n";
         

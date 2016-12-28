@@ -368,41 +368,41 @@ public:
             Handler(Document* document_) : document(document_), cur(nullptr) {}
             
             void startDocument() { cur = document; }
-            void startElement(const char* name, std::size_t nameLength) {
+            void startElement(Corecat::StringView name) {
                 
-                auto& element = document->createElement({name, nameLength});
+                auto& element = document->createElement(name);
                 cur->appendChild(element);
                 cur = &element;
                 
             }
-            void endElement(const char* /*name*/, std::size_t /*nameLength*/) {
+            void endElement(Corecat::StringView /*name*/) {
                 
                 cur = cur->parent;
                 
             }
-            void attribute(const char* name, std::size_t nameLength, const char* value, std::size_t valueLength) {
+            void attribute(Corecat::StringView name, Corecat::StringView value) {
                 
-                static_cast<Element*>(cur)->appendAttribute(document->createAttribute({name, nameLength}, {value, valueLength}));
-                
-            }
-            void text(const char* value, std::size_t valueLength) {
-                
-                cur->appendChild(document->createText({value, valueLength}));
+                static_cast<Element*>(cur)->appendAttribute(document->createAttribute(name, value));
                 
             }
-            void cdata(const char* value, std::size_t valueLength) {
+            void text(Corecat::StringView value) {
                 
-                cur->appendChild(document->createCDATA({value, valueLength}));
-                
-            }
-            void comment(const char* value, std::size_t valueLength) {
-                
-                cur->appendChild(document->createComment({value, valueLength}));
+                cur->appendChild(document->createText(value));
                 
             }
-            void processingInstruction(const char* name, std::size_t nameLength, const char* value, std::size_t valueLength) {
+            void cdata(Corecat::StringView value) {
                 
-                cur->appendChild(document->createProcessingInstruction({name, nameLength}, {value, valueLength}));
+                cur->appendChild(document->createCDATA(value));
+                
+            }
+            void comment(Corecat::StringView value) {
+                
+                cur->appendChild(document->createComment(value));
+                
+            }
+            void processingInstruction(Corecat::StringView name, Corecat::StringView value) {
+                
+                cur->appendChild(document->createProcessingInstruction(name, value));
                 
             }
             
@@ -431,50 +431,43 @@ public:
                 case Type::Element: {
                     
                     auto& element = static_cast<Element&>(*cur);
-                    serializer.startElement(element.getName().getData(), element.getName().getLength());
+                    serializer.startElement(element.getName());
                     for(auto& attr : element.attribute()) {
                         
-                        auto name = attr.getName();
-                        auto value = attr.getValue();
-                        serializer.attribute(name.getData(), name.getLength(), value.getData(), value.getLength());
+                        serializer.attribute(attr.getName(), attr.getValue());
                         
                     }
                     serializer.endAttributes();
                     if(cur->hasChildNodes()) { cur = &cur->getFirstChild(); continue; }
-                    else serializer.endElement(element.getName().getData(), element.getName().getLength());
+                    else serializer.endElement(element.getName());
                     break;
                     
                 }
                 case Type::Text: {
                     
                     auto& text = static_cast<Text&>(*cur);
-                    auto value = text.getValue();
-                    serializer.text(value.getData(), value.getLength());
+                    serializer.text(text.getValue());
                     break;
                     
                 }
                 case Type::CDATA: {
                     
                     auto& cdata = static_cast<CDATA&>(*cur);
-                    auto value = cdata.getValue();
-                    serializer.cdata(value.getData(), value.getLength());
+                    serializer.cdata(cdata.getValue());
                     break;
                     
                 }
                 case Type::Comment: {
                     
                     auto& comment = static_cast<Comment&>(*cur);
-                    auto value = comment.getValue();
-                    serializer.comment(value.getData(), value.getLength());
+                    serializer.comment(comment.getValue());
                     break;
                     
                 }
                 case Type::ProcessingInstruction: {
                     
                     auto& pi = static_cast<ProcessingInstruction&>(*cur);
-                    auto name = pi.getName();
-                    auto value = pi.getValue();
-                    serializer.processingInstruction(name.getData(), name.getLength(), value.getData(), value.getLength());
+                    serializer.processingInstruction(pi.getName(), pi.getValue());
                     break;
                     
                 }
@@ -486,7 +479,7 @@ public:
                     cur = cur->parent;
                     if(cur == this) break;
                     auto name = static_cast<Element*>(cur)->getName();
-                    serializer.endElement(name.getData(), name.getLength());
+                    serializer.endElement(name);
                     
                 }
                 if(cur == this) break;

@@ -28,6 +28,9 @@
 #define CATS_TEXTCAT_XML_HANDLER_HPP
 
 
+#include "Cats/Corecat/String.hpp"
+
+
 namespace Cats {
 namespace Textcat{
 namespace XML {
@@ -38,15 +41,15 @@ public:
     
     void startDocument() {}
     void endDocument() {}
-    void startElement(const char* /*name*/, std::size_t /*nameLength*/) {}
-    void endElement(const char* /*name*/, std::size_t /*nameLength*/) {}
+    void startElement(Corecat::StringView /*name*/) {}
+    void endElement(Corecat::StringView /*name*/) {}
     void endAttributes() {}
     void doctype() {}
-    void attribute(const char* /*name*/, std::size_t /*nameLength*/, const char* /*value*/, std::size_t /*valueLength*/) {}
-    void text(const char* /*value*/, std::size_t /*valueLength*/) {}
-    void cdata(const char* /*value*/, std::size_t /*valueLength*/) {}
-    void comment(const char* /*value*/, std::size_t /*valueLength*/) {}
-    void processingInstruction(const char* /*name*/, std::size_t /*nameLength*/, const char* /*value*/, std::size_t /*valueLength*/) {}
+    void attribute(Corecat::StringView /*name*/, Corecat::StringView /*value*/) {}
+    void text(Corecat::StringView /*value*/) {}
+    void cdata(Corecat::StringView /*value*/) {}
+    void comment(Corecat::StringView /*value*/) {}
+    void processingInstruction(Corecat::StringView /*name*/, Corecat::StringView /*value*/) {}
     
 };
 

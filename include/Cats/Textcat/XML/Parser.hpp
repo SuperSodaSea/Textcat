@@ -406,7 +406,7 @@ private:
         std::size_t commentLength = p - comment;
         *p = 0;
         p += 3;
-        handler.comment(comment, commentLength);
+        handler.comment({comment, commentLength});
         
     }
     template <Flag F, typename H>
@@ -426,7 +426,7 @@ private:
         *targetEnd = 0;
         *p = 0;
         p += 2;
-        handler.processingInstruction(target, targetLength, content, contentLength);
+        handler.processingInstruction({target, targetLength}, {content, contentLength});
         
     }
     template <Flag F, typename H>
@@ -439,7 +439,7 @@ private:
         std::size_t textLength = p - text;
         *p = 0;
         p += 3;
-        handler.cdata(text, textLength);
+        handler.cdata({text, textLength});
         
     }
     template <Flag F, typename H>
@@ -456,21 +456,21 @@ private:
             
             *p = 0;
             ++p;
-            handler.startElement(name, nameLength);
+            handler.startElement({name, nameLength});
             
         } else if(*p == '/') {
             
             if(p[1] != '>') throw Exception(p + 1 - s, "expected >");
             *p = 0;
             p += 2;
-            handler.startElement(name, nameLength);
+            handler.startElement({name, nameLength});
             empty = true;
             
         } else {
             
             *p = 0;
             ++p;
-            handler.startElement(name, nameLength);
+            handler.startElement({name, nameLength});
             Impl::Skipper<Impl::Space>::skip(p);
             while(Table<Mapper<Impl::AttributeName, Index<unsigned char, 0, 255>>>::get(*p)) {
                 
@@ -515,7 +515,7 @@ private:
                         
                     }
                     ++p;
-                    handler.attribute(name, nameLength, value, valueLength);
+                    handler.attribute({name, nameLength}, {value, valueLength});
                     
                 } else if(*p == '\'') {
                     
@@ -546,7 +546,7 @@ private:
                         
                     }
                     ++p;
-                    handler.attribute(name, nameLength, value, valueLength);
+                    handler.attribute({name, nameLength}, {value, valueLength});
                     
                 } else throw Exception(p - s, "expected \" or '");
                 Impl::Skipper<Impl::Space>::skip(p);
@@ -595,7 +595,7 @@ private:
                             if(F & Flag::TrimSpace && q[-1] == ' ') --q;
                             *q = 0;
                             std::size_t textLength = q - text;
-                            handler.text(text, textLength);
+                            handler.text({text, textLength});
                             
                         } else {
                             
@@ -617,7 +617,7 @@ private:
                             ++q;
                             *q = 0;
                             std::size_t textLength = q - text;
-                            handler.text(text, textLength);
+                            handler.text({text, textLength});
                             
                         }
                         
@@ -643,7 +643,7 @@ private:
                             ++q;
                             *q = 0;
                             std::size_t textLength = q - text;
-                            handler.text(text, textLength);
+                            handler.text({text, textLength});
                             
                         } else {
                             
@@ -656,7 +656,7 @@ private:
                             ++q;
                             *q = 0;
                             std::size_t textLength = q - text;
-                            handler.text(text, textLength);
+                            handler.text({text, textLength});
                             
                         }
                         
@@ -697,7 +697,7 @@ private:
                     if(*p != '>') throw Exception(p - s, "expected >");
                     *endNameEnd = 0;
                     ++p;
-                    handler.endElement(endName, endNameEnd - endName);
+                    handler.endElement({endName, static_cast<std::size_t>(endNameEnd - endName)});
                         
                     } else {
                         
@@ -709,7 +709,7 @@ private:
                         if(*p != '>') throw Exception(p - s, "expected >");
                         *endNameEnd = 0;
                         ++p;
-                        handler.endElement(endName, nameLength);
+                        handler.endElement({endName, nameLength});
                         
                     }
                     c = false;
@@ -734,7 +734,7 @@ private:
                 
             } while(c);
             
-        } else handler.endElement(name, nameLength);
+        } else handler.endElement({name, nameLength});
         
     }
     

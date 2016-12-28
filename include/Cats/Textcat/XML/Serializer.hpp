@@ -34,6 +34,7 @@
 #include <iostream>
 
 #include "Cats/Corecat/Stream.hpp"
+#include "Cats/Corecat/String.hpp"
 
 #include "Handler.hpp"
 
@@ -58,69 +59,62 @@ public:
     
     void startDocument() {}
     void endDocument() {}
-    void startElement(const char* name, std::size_t nameLength) {
+    void startElement(Corecat::StringView name) {
         
         stream->write("<", 1);
-        stream->write(name, nameLength);
+        stream->write(name.getData(), name.getLength());
         
     }
-    void startElement(const char* name) { startElement(name, std::strlen(name)); }
-    void endElement(const char* name, std::size_t nameLength) {
+    void endElement(Corecat::StringView name) {
         
         stream->write("</", 2);
-        stream->write(name, nameLength);
+        stream->write(name.getData(), name.getLength());
         stream->write(">", 1);
         
     }
-    void endElement(const char* name) { endElement(name, std::strlen(name)); }
     void endAttributes() {
         
         stream->write(">", 1);
         
     }
     void doctype() {}
-    void attribute(const char* name, std::size_t nameLength, const char* value, std::size_t valueLength) {
+    void attribute(Corecat::StringView name, Corecat::StringView value) {
         
         stream->write(" ", 1);
-        stream->write(name, nameLength);
+        stream->write(name.getData(), name.getLength());
         stream->write("=\"", 2);
-        stream->write(value, valueLength);
+        stream->write(value.getData(), value.getLength());
         stream->write("\"", 1);
         
     }
-    void attribute(const char* name, const char* value) { attribute(name, std::strlen(name), value, std::strlen(value)); }
-    void text(const char* value, std::size_t valueLength) {
+    void text(Corecat::StringView value) {
         
-        stream->write(value, valueLength);
+        stream->write(value.getData(), value.getLength());
         
     }
-    void text(const char* value) { text(value, std::strlen(value)); }
-    void cdata(const char* value, std::size_t valueLength) {
+    void cdata(Corecat::StringView value) {
         
         stream->write("<![CDATA[", 9);
-        stream->write(value, valueLength);
+        stream->write(value.getData(), value.getLength());
         stream->write("]]>", 3);
         
     }
-    void cdata(const char* value) { cdata(value, std::strlen(value)); }
-    void comment(const char* value, std::size_t valueLength) {
+    void comment(Corecat::StringView value) {
         
         stream->write("<!--", 4);
-        stream->write(value, valueLength);
+        stream->write(value.getData(), value.getLength());
         stream->write("-->", 3);
         
     }
-    void comment(const char* value) { comment(value, std::strlen(value)); }
-    void processingInstruction(const char* name, std::size_t nameLength, const char* value, std::size_t valueLength) {
+    void processingInstruction(Corecat::StringView name, Corecat::StringView value) {
         
         stream->write("<?", 2);
-        stream->write(name, nameLength);
+        stream->write(name.getData(), name.getLength());
         stream->write(" ", 1);
-        stream->write(value, valueLength);
+        stream->write(value.getData(), value.getLength());
         stream->write("?>", 2);
         
     }
-    void processingInstruction(const char* name, const char* value) { processingInstruction(name, std::strlen(name), value, std::strlen(value)); }
     
 };
 
