@@ -399,47 +399,44 @@ private:
     template <Flag F, typename H>
     void parseComment(H& handler) {
         
-        auto comment = p;
+        Corecat::StringView comment(p, 0);
         // Until "-->"
         while(*p && (p[0] != '-' || p[1] != '-' || p[2] != '>')) ++p;
         if(!*p) throw Exception(p - s, "unexpected end");
-        std::size_t commentLength = p - comment;
-        *p = 0;
+        comment.setLength(p - comment.getData());
         p += 3;
-        handler.comment({comment, commentLength});
+        handler.comment(comment);
         
     }
     template <Flag F, typename H>
     void parseProcessingInstruction(H& handler) {
         
-        auto target = p;
-        std::size_t targetLength = Impl::Skipper<Impl::Name>::skip(p);
-        if(!targetLength) throw Exception(p - s, "expected PI target");
-        auto targetEnd = p;
+        Corecat::StringView target(p, 0);
+        target.setLength(Impl::Skipper<Impl::Name>::skip(p));
+        if(!target.getLength()) throw Exception(p - s, "expected PI target");
         if((p[0] != '?' || p[1] != '>') && !Impl::Skipper<Impl::Space>::skip(p))
             throw Exception(p - s, "expected space");
-        auto content = p;
+        
+        Corecat::StringView content(p, 0);
         // Until "?>"
         while(*p && (p[0] != '?' || p[1] != '>')) ++p;
         if(!*p) throw Exception(p - s, "unexpected end");
-        std::size_t contentLength = p - content;
-        *targetEnd = 0;
-        *p = 0;
+        content.setLength(p - content.getData());
         p += 2;
-        handler.processingInstruction({target, targetLength}, {content, contentLength});
+        
+        handler.processingInstruction(target, content);
         
     }
     template <Flag F, typename H>
     void parseCDATA(H& handler) {
         
-        auto text = p;
+        Corecat::StringView text(p, 0);
         // Until "]]>"
         while(*p && (p[0] != ']' || p[1] != ']' || p[2] != '>')) ++p;
         if(!*p) throw Exception(p - s, "unexpected end");
-        std::size_t textLength = p - text;
-        *p = 0;
+        text.setLength(p - text.getData());
         p += 3;
-        handler.cdata({text, textLength});
+        handler.cdata(text);
         
     }
     template <Flag F, typename H>
@@ -448,49 +445,44 @@ private:
         using namespace Corecat::Sequence;
         
         // Parse element type
-        auto name = p;
-        std::size_t nameLength = Impl::Skipper<Impl::Name>::skip(p);
-        if(!nameLength) throw Exception(p - s, "expected element type");
+        Corecat::StringView name(p, 0);
+        name.setLength(Impl::Skipper<Impl::Name>::skip(p));
+        if(!name.getLength()) throw Exception(p - s, "expected element type");
         bool empty = false;
         if(*p == '>') {
             
-            *p = 0;
             ++p;
-            handler.startElement({name, nameLength});
+            handler.startElement(name);
             
         } else if(*p == '/') {
             
             if(p[1] != '>') throw Exception(p + 1 - s, "expected >");
-            *p = 0;
             p += 2;
-            handler.startElement({name, nameLength});
+            handler.startElement(name);
             empty = true;
             
         } else {
             
-            *p = 0;
             ++p;
-            handler.startElement({name, nameLength});
+            handler.startElement(name);
             Impl::Skipper<Impl::Space>::skip(p);
             while(Table<Mapper<Impl::AttributeName, Index<unsigned char, 0, 255>>>::get(*p)) {
                 
                 // Parse attribute name
-                auto name = p;
-                std::size_t nameLength = Impl::Skipper<Impl::AttributeName>::skip(p);
-                if(!nameLength) throw Exception(p - s, "expected attribute name");
-                auto nameEnd = p;
+                Corecat::StringView name(p, 0);
+                name.setLength(Impl::Skipper<Impl::AttributeName>::skip(p));
+                if(!name.getLength()) throw Exception(p - s, "expected attribute name");
                 Impl::Skipper<Impl::Space>::skip(p);
                 if(*p != '=') throw Exception(p - s, "expected =");
-                *nameEnd = 0;
                 ++p;
                 Impl::Skipper<Impl::Space>::skip(p);
                 
                 // Parse attribute value
+                Corecat::StringView value;
                 if(*p == '"') {
                     
                     ++p;
-                    auto value = p;
-                    std::size_t valueLength;
+                    value.setData(p);
                     if(F & Flag::EntityTranslation) {
                         
                         auto q = p;
@@ -504,24 +496,20 @@ private:
                             else break;
                             
                         }
-                        *q = 0;
-                        valueLength = q - value;
+                        value.setLength(q - value.getData());
                         
                     } else {
                         
-                        valueLength = Impl::Skipper<Impl::AttributeValue1>::skip(p);
+                        value.setLength(Impl::Skipper<Impl::AttributeValue1>::skip(p));
                         if(*p == 0) throw Exception(p - s, "unexpected end");
-                        *p = 0;
                         
                     }
                     ++p;
-                    handler.attribute({name, nameLength}, {value, valueLength});
                     
                 } else if(*p == '\'') {
                     
                     ++p;
-                    auto value = p;
-                    std::size_t valueLength;
+                    value.setData(p);
                     if(F & Flag::EntityTranslation) {
                         
                         auto q = p;
@@ -535,20 +523,18 @@ private:
                             else break;
                             
                         }
-                        *q = 0;
-                        valueLength = q - value;
+                        value.setLength(q - value.getData());
                         
                     } else {
                         
-                        valueLength = Impl::Skipper<Impl::AttributeValue2>::skip(p);
+                        value.setLength(Impl::Skipper<Impl::AttributeValue2>::skip(p));
                         if(*p == 0) throw Exception(p - s, "unexpected end");
-                        *p = 0;
                         
                     }
                     ++p;
-                    handler.attribute({name, nameLength}, {value, valueLength});
                     
                 } else throw Exception(p - s, "expected \" or '");
+                handler.attribute(name, value);
                 Impl::Skipper<Impl::Space>::skip(p);
                 
             }
@@ -579,7 +565,7 @@ private:
                         
                         if(F & Flag::NormalizeSpace) {
                             
-                            auto text = p;
+                            Corecat::StringView text(p, 0);
                             auto q = p;
                             while(true) {
                                 
@@ -593,13 +579,12 @@ private:
                                 
                             }
                             if(F & Flag::TrimSpace && q[-1] == ' ') --q;
-                            *q = 0;
-                            std::size_t textLength = q - text;
-                            handler.text({text, textLength});
+                            text.setLength(q - text.getData());
+                            handler.text(text);
                             
                         } else {
                             
-                            auto text = p;
+                            Corecat::StringView text(p, 0);
                             auto q = p;
                             while(true) {
                                 
@@ -615,17 +600,16 @@ private:
                             if(F & Flag::TrimSpace)
                                 for(; Table<Mapper<Impl::Space, Index<unsigned char, 0, 255>>>::get(*q); --q);
                             ++q;
-                            *q = 0;
-                            std::size_t textLength = q - text;
-                            handler.text({text, textLength});
+                            text.setLength(q - text.getData());
+                            handler.text(text);
                             
                         }
                         
                     } else {
                         
                         if(F & Flag::NormalizeSpace) {
-                                
-                            auto text = p;
+                            
+                            Corecat::StringView text(p, 0);
                             auto q = p;
                             while(true) {
                                 
@@ -641,22 +625,20 @@ private:
                             if(F & Flag::TrimSpace)
                                 for(; Table<Mapper<Impl::Space, Index<unsigned char, 0, 255>>>::get(*q); --q);
                             ++q;
-                            *q = 0;
-                            std::size_t textLength = q - text;
-                            handler.text({text, textLength});
+                            text.setLength(q - text.getData());
+                            handler.text(text);
                             
                         } else {
                             
-                            auto text = p;
+                            Corecat::StringView text(p, 0);
                             Impl::Skipper<Impl::Text>::skip(p);
                             if(*p == 0) throw Exception(p - s, "unexpected end");
                             auto q = p - 1;
                             if(F & Flag::TrimSpace)
                                 for(; Table<Mapper<Impl::Space, Index<unsigned char, 0, 255>>>::get(*q); --q);
                             ++q;
-                            *q = 0;
-                            std::size_t textLength = q - text;
-                            handler.text({text, textLength});
+                            text.setLength(q - text.getData());
+                            handler.text(text);
                             
                         }
                         
@@ -690,26 +672,23 @@ private:
                     ++p;
                     if(F & Flag::ClosingTagValidate) {
                     
-                    auto endName = p;
-                    Impl::Skipper<Impl::Name>::skip(p);
-                    auto endNameEnd = p;
-                    Impl::Skipper<Impl::Space>::skip(p);
-                    if(*p != '>') throw Exception(p - s, "expected >");
-                    *endNameEnd = 0;
-                    ++p;
-                    handler.endElement({endName, static_cast<std::size_t>(endNameEnd - endName)});
+                        Corecat::StringView endName(p, 0);
+                        Impl::Skipper<Impl::Name>::skip(p);
+                        endName.setLength(p - endName.getData());
+                        Impl::Skipper<Impl::Space>::skip(p);
+                        if(*p != '>') throw Exception(p - s, "expected >");
+                        ++p;
+                        handler.endElement(endName);
                         
                     } else {
                         
-                        if(!compare(p, name, nameLength)) throw Exception(p - s, "unmatch element type");
-                        auto endName = p;
-                        p += nameLength;
-                        auto endNameEnd = p;
+                        Corecat::StringView endName(p, name.getLength());
+                        if(endName != name) throw Exception(p - s, "unmatch element type");
+                        p += name.getLength();
                         Impl::Skipper<Impl::Space>::skip(p);
                         if(*p != '>') throw Exception(p - s, "expected >");
-                        *endNameEnd = 0;
                         ++p;
-                        handler.endElement({endName, nameLength});
+                        handler.endElement(endName);
                         
                     }
                     c = false;
@@ -734,7 +713,7 @@ private:
                 
             } while(c);
             
-        } else handler.endElement({name, nameLength});
+        } else handler.endElement(name);
         
     }
     

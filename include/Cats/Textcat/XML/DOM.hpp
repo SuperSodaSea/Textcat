@@ -99,6 +99,7 @@ public:
     
     List() : first(), last() {}
     List(const List& src) = delete;
+    ~List() = default;
     
     T& append(Node& parent, T& child) {
         
@@ -172,6 +173,7 @@ public:
     
     Node(Type type_) : Impl::List<Node>::ListElement(), type(type_), listChild() {}
     Node(const Node& src) = delete;
+    ~Node() = default;
     
     Type getType() const { return type; }
     
@@ -200,6 +202,7 @@ public:
     Attribute(Corecat::StringView name_, Corecat::StringView value_) :
         Impl::List<Attribute>::ListElement(), name(name_), value(value_) {}
     Attribute(const Attribute& src) = delete;
+    ~Attribute() = default;
     
     Corecat::StringView getName() const { return name; }
     void setName(Corecat::StringView name_) { name = name_; }
@@ -220,6 +223,7 @@ public:
     Element() : Node(Type::Element), listAttr(), name() {}
     Element(Corecat::StringView name_) : Node(Type::Element), listAttr(), name(name_) {}
     Element(const Element& src) = delete;
+    ~Element() = default;
     
     Impl::List<Attribute>& attribute() { return listAttr; }
     
@@ -244,6 +248,7 @@ public:
     Text() : Node(Type::Text), value() {}
     Text(Corecat::StringView value_) : Node(Type::Text), value(value_) {}
     Text(const Text& src) = delete;
+    ~Text() = default;
     
     Corecat::StringView getValue() const { return value; }
     void setValue(Corecat::StringView value_) { value = value_; }
@@ -261,6 +266,7 @@ public:
     CDATA() : Node(Type::CDATA), value() {}
     CDATA(Corecat::StringView value_) : Node(Type::CDATA), value(value_) {}
     CDATA(const CDATA& src) = delete;
+    ~CDATA() = default;
     
     Corecat::StringView getValue() const { return value; }
     void setValue(Corecat::StringView value_) { value = value_; }
@@ -278,6 +284,7 @@ public:
     Comment() : Node(Type::Comment), value() {}
     Comment(Corecat::StringView value_) : Node(Type::Comment), value(value_) {}
     Comment(const Comment& src) = delete;
+    ~Comment() = default;
     
     Corecat::StringView getValue() const { return value; }
     void setValue(Corecat::StringView value_) { value = value_; }
@@ -297,6 +304,7 @@ public:
     ProcessingInstruction(Corecat::StringView& name_, Corecat::StringView& value_) :
         Node(Type::ProcessingInstruction), name(name_), value(value_) {}
     ProcessingInstruction(const ProcessingInstruction& src) = delete;
+    ~ProcessingInstruction() = default;
     
     Corecat::StringView getName() const { return name; }
     void setName(Corecat::StringView name_) { name = name_; }
@@ -315,6 +323,7 @@ public:
     
     Document() : Node(Type::Document), memoryPool() {}
     Document(const Document& src) = delete;
+    ~Document() = default;
     
     Element& createElement(Corecat::StringView name) {
         
