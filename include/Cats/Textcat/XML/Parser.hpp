@@ -167,23 +167,6 @@ private:
     
 private:
     
-    static bool compare(const char* p1, const char* p2, size_t length) {
-        
-        for(const char* end = p1 + length; p1 < end; ++p1, ++p2) {
-            
-            if(*p1 != *p2) {
-                
-                return false;
-                
-            }
-            
-        }
-        return true;
-        
-    }
-    
-private:
-    
     template <Flag F>
     void parseReference(char*& q) {
         
@@ -551,7 +534,7 @@ private:
             } else throw Exception(p + 1 - s, "unexpected character");
             
         }
-        handler.endAttributes();
+        handler.endAttributes(empty);
         if(!empty) {
             
             bool c = true;

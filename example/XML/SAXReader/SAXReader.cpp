@@ -59,9 +59,9 @@ public:
         --level; indent(); std::cout << "endElement(\"" << name << "\")\n";
         
     }
-    void endAttributes() {
+    void endAttributes(bool empty) {
         
-        indent(); std::cout << "endAttributes()\n";
+        indent(); std::cout << "endAttributes(" << std::boolalpha << empty << ")\n"; if(empty) --level;
         
     }
     void doctype() { indent(); std::cout << "doctype()\n"; }

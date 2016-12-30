@@ -72,9 +72,10 @@ public:
         stream->write(">", 1);
         
     }
-    void endAttributes() {
+    void endAttributes(bool empty) {
         
-        stream->write(">", 1);
+        if(empty) stream->write("/>", 2);
+        else stream->write(">", 1);
         
     }
     void doctype() {}

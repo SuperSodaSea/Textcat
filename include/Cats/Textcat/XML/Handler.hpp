@@ -43,7 +43,7 @@ public:
     void endDocument() {}
     void startElement(Corecat::StringView /*name*/) {}
     void endElement(Corecat::StringView /*name*/) {}
-    void endAttributes() {}
+    void endAttributes(bool /*empty*/) {}
     void doctype() {}
     void attribute(Corecat::StringView /*name*/, Corecat::StringView /*value*/) {}
     void text(Corecat::StringView /*value*/) {}

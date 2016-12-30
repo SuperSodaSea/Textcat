@@ -40,13 +40,12 @@ int main() {
     XML::Serializer s(wrapper);
     s.startDocument();
         s.startElement("list");
-            s.endAttributes();
+            s.endAttributes(false);
             s.startElement("person");
                 s.attribute("name", "SuperSodaSea");
                 s.attribute("gender", "male");
                 s.attribute("age", "16");
-                s.endAttributes();
-            s.endElement("person");
+                s.endAttributes(true);
         s.endElement("list");
     s.endDocument();
     std::cout << std::endl;

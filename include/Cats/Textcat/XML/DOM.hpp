@@ -389,6 +389,11 @@ public:
                 cur = cur->parent;
                 
             }
+            void endAttributes(bool empty) {
+                
+                if(empty) cur = cur->parent;
+                
+            }
             void attribute(Corecat::StringView name, Corecat::StringView value) {
                 
                 static_cast<Element*>(cur)->appendAttribute(document->createAttribute(name, value));
@@ -446,9 +451,9 @@ public:
                         serializer.attribute(attr.getName(), attr.getValue());
                         
                     }
-                    serializer.endAttributes();
-                    if(cur->hasChildNodes()) { cur = &cur->getFirstChild(); continue; }
-                    else serializer.endElement(element.getName());
+                    bool empty = !cur->hasChildNodes();
+                    serializer.endAttributes(empty);
+                    if(!empty) { cur = &cur->getFirstChild(); continue; }
                     break;
                     
                 }
