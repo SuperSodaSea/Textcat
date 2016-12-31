@@ -696,7 +696,7 @@ private:
                 
             } while(c);
             
-        } else handler.endElement(name);
+        }
         
     }
     
