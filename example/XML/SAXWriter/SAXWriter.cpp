@@ -36,7 +36,7 @@ int main() {
     
     std::ios::sync_with_stdio(false);
     
-    auto wrapper = Stream::createWrapper(std::cout);
+    auto wrapper = createStreamWrapper(std::cout);
     XML::Serializer s(wrapper);
     s.startDocument();
         s.startElement("list");

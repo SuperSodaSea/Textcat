@@ -431,7 +431,7 @@ public:
         
     }
     
-    void serialize(Corecat::Stream::Base& stream) {
+    void serialize(Corecat::Stream& stream) {
         
         Serializer serializer(stream);
         serializer.startDocument();
@@ -510,7 +510,7 @@ public:
 
 inline std::ostream& operator <<(std::ostream& stream, Document& document) {
     
-    auto wrapper = Corecat::Stream::createWrapper(stream);
+    auto wrapper = Corecat::createStreamWrapper(stream);
     document.serialize(wrapper);
     return stream;
     
