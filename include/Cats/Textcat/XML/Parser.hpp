@@ -47,14 +47,14 @@ namespace Impl {
 template <typename T, T... V>
 struct Include {
     
-    static constexpr bool get(T t) { return Corecat::Sequence::Contain<Corecat::Sequence::Base<T, V...>>::get(t); }
+    static constexpr bool get(T t) { return Corecat::Sequence::Contain<Corecat::Sequence::Sequence<T, V...>>::get(t); }
     
 };
 
 template <typename T, T... V>
 struct Exclude {
     
-    static constexpr bool get(T t) { return !Corecat::Sequence::Contain<Corecat::Sequence::Base<T, V...>>::get(t); }
+    static constexpr bool get(T t) { return !Corecat::Sequence::Contain<Corecat::Sequence::Sequence<T, V...>>::get(t); }
     
 };
 

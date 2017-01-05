@@ -47,12 +47,12 @@ class Serializer : public HandlerBase {
     
 private:
     
-    Corecat::Stream* stream;
+    Corecat::Stream::Stream<>* stream;
     
 public:
     
     Serializer() = default;
-    Serializer(Corecat::Stream& stream_) : stream(&stream_) { assert(stream->isWriteable()); }
+    Serializer(Corecat::Stream::Stream<>& stream_) : stream(&stream_) { assert(stream->isWriteable()); }
     
     void startDocument() {}
     void endDocument() {}
@@ -114,8 +114,8 @@ public:
         
     }
     
-    Corecat::Stream& getStream() { return *stream; }
-    void setStream(Corecat::Stream& stream_) { stream = &stream_; }
+    Corecat::Stream::Stream<>& getStream() { return *stream; }
+    void setStream(Corecat::Stream::Stream<>& stream_) { stream = &stream_; }
     
 };
 
