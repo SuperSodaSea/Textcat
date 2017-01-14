@@ -63,7 +63,7 @@ int main(int argc, char** argv) {
         std::vector<char> data;
         readFile(argv[1], data);
         XML::Document document;
-        document.parse<XML::Parser::Flag::Default>(data.data());
+        document.parse<>(data.data());
         std::cout << document << std::endl;
         
     } catch(std::exception& e) {

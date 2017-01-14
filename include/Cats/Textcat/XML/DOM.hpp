@@ -113,7 +113,7 @@ public:
     
     T& insertBefore(T& child, T& ref) {
         
-        assert(!child->parent && ref->parent);
+        assert(!child.parent && ref.parent);
         auto pPrev = ref.prev;
         child.prev = pPrev;
         child.next = &ref;
@@ -362,7 +362,7 @@ public:
         
     }
     
-    template <Parser::Flag F>
+    template <Parser::Flag F = Parser::Flag::Default>
     void parse(char* data) {
         
         class Handler : public HandlerBase {

@@ -123,7 +123,7 @@ int main(int argc, char** argv) {
         readFile(argv[1], data);
         XML::Parser parser;
         Handler handler;
-        parser.parse<XML::Parser::Flag::Default>(data.data(), handler);
+        parser.parse<>(data.data(), handler);
         
     } catch(std::exception& e) {
         

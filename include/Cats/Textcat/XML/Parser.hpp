@@ -704,7 +704,7 @@ public:
     
     Parser() = default;
     
-    template <Flag F, typename H>
+    template <Flag F = Flag::Default, typename H>
     void parse(char* data, H& handler) {
         
         using namespace Corecat::Sequence;
