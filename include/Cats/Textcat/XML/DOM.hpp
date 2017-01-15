@@ -48,6 +48,12 @@ namespace Textcat{
 namespace XML {
 
 class Node;
+class Element;
+class Text;
+class CDATA;
+class Comment;
+class ProcessingInstruction;
+class Document;
 
 namespace Impl {
 
@@ -187,6 +193,19 @@ public:
     Node& removeChild(Node& child) { return listChild.remove(child); }
     bool hasChildNodes() { return !listChild.empty(); }
     
+    Element& asElement() noexcept { return reinterpret_cast<Element&>(*this); }
+    const Element& asElement() const noexcept { return reinterpret_cast<const Element&>(*this); }
+    Text& asText() noexcept { return reinterpret_cast<Text&>(*this); }
+    const Text& asText() const noexcept { return reinterpret_cast<const Text&>(*this); }
+    CDATA& asCDATA() noexcept { return reinterpret_cast<CDATA&>(*this); }
+    const CDATA& asCDATA() const noexcept { return reinterpret_cast<const CDATA&>(*this); }
+    Comment& asComment() noexcept { return reinterpret_cast<Comment&>(*this); }
+    const Comment& asComment() const noexcept { return reinterpret_cast<const Comment&>(*this); }
+    ProcessingInstruction& asProcessingInstruction() noexcept { return reinterpret_cast<ProcessingInstruction&>(*this); }
+    const ProcessingInstruction& asProcessingInstruction() const noexcept { return reinterpret_cast<const ProcessingInstruction&>(*this); }
+    Document& asDocument() noexcept { return reinterpret_cast<Document&>(*this); }
+    const Document& asDocument() const noexcept { return reinterpret_cast<const Document&>(*this); }
+    
 };
 
 class Attribute : public Impl::List<Attribute>::ListElement {
@@ -315,6 +334,23 @@ public:
 
 class Document : public Node {
     
+public:
+    
+    class Exception : public std::exception {
+        
+    private:
+        
+        const char* str;
+        
+    public:
+        
+        Exception(const char* str_) : str(str_) {}
+        Exception(const Exception& src) : str(src.str) {}
+        
+        const char* what() const noexcept final { return str; }
+        
+    };
+    
 private:
     
     Corecat::MemoryPoolFast<> memoryPool;
@@ -359,6 +395,13 @@ public:
     void clear() {
         
         memoryPool.clear();
+        
+    }
+    
+    Element& getRootElement() {
+        
+        for(auto& node : child()) if(node.getType() == Type::Element) return static_cast<Element&>(node);
+        throw Exception("root element not found");
         
     }
     
