@@ -382,7 +382,7 @@ private:
     template <Flag F, typename H>
     void parseComment(H& handler) {
         
-        Corecat::StringView comment(p, 0);
+        Corecat::StringView8 comment(p, 0);
         // Until "-->"
         while(*p && (p[0] != '-' || p[1] != '-' || p[2] != '>')) ++p;
         if(!*p) throw Exception(p - s, "unexpected end");
@@ -394,13 +394,13 @@ private:
     template <Flag F, typename H>
     void parseProcessingInstruction(H& handler) {
         
-        Corecat::StringView target(p, 0);
+        Corecat::StringView8 target(p, 0);
         target.setLength(Impl::Skipper<Impl::Name>::skip(p));
         if(!target.getLength()) throw Exception(p - s, "expected PI target");
         if((p[0] != '?' || p[1] != '>') && !Impl::Skipper<Impl::Space>::skip(p))
             throw Exception(p - s, "expected space");
         
-        Corecat::StringView content(p, 0);
+        Corecat::StringView8 content(p, 0);
         // Until "?>"
         while(*p && (p[0] != '?' || p[1] != '>')) ++p;
         if(!*p) throw Exception(p - s, "unexpected end");
@@ -413,7 +413,7 @@ private:
     template <Flag F, typename H>
     void parseCDATA(H& handler) {
         
-        Corecat::StringView text(p, 0);
+        Corecat::StringView8 text(p, 0);
         // Until "]]>"
         while(*p && (p[0] != ']' || p[1] != ']' || p[2] != '>')) ++p;
         if(!*p) throw Exception(p - s, "unexpected end");
@@ -428,7 +428,7 @@ private:
         using namespace Corecat::Sequence;
         
         // Parse element type
-        Corecat::StringView name(p, 0);
+        Corecat::StringView8 name(p, 0);
         name.setLength(Impl::Skipper<Impl::Name>::skip(p));
         if(!name.getLength()) throw Exception(p - s, "expected element type");
         bool empty = false;
@@ -452,7 +452,7 @@ private:
             while(Table<Mapper<Impl::AttributeName, Index<unsigned char, 0, 255>>>::get(*p)) {
                 
                 // Parse attribute name
-                Corecat::StringView name(p, 0);
+                Corecat::StringView8 name(p, 0);
                 name.setLength(Impl::Skipper<Impl::AttributeName>::skip(p));
                 if(!name.getLength()) throw Exception(p - s, "expected attribute name");
                 Impl::Skipper<Impl::Space>::skip(p);
@@ -461,7 +461,7 @@ private:
                 Impl::Skipper<Impl::Space>::skip(p);
                 
                 // Parse attribute value
-                Corecat::StringView value;
+                Corecat::StringView8 value;
                 if(*p == '"') {
                     
                     ++p;
@@ -548,7 +548,7 @@ private:
                         
                         if(F & Flag::NormalizeSpace) {
                             
-                            Corecat::StringView text(p, 0);
+                            Corecat::StringView8 text(p, 0);
                             auto q = p;
                             while(true) {
                                 
@@ -567,7 +567,7 @@ private:
                             
                         } else {
                             
-                            Corecat::StringView text(p, 0);
+                            Corecat::StringView8 text(p, 0);
                             auto q = p;
                             while(true) {
                                 
@@ -592,7 +592,7 @@ private:
                         
                         if(F & Flag::NormalizeSpace) {
                             
-                            Corecat::StringView text(p, 0);
+                            Corecat::StringView8 text(p, 0);
                             auto q = p;
                             while(true) {
                                 
@@ -613,7 +613,7 @@ private:
                             
                         } else {
                             
-                            Corecat::StringView text(p, 0);
+                            Corecat::StringView8 text(p, 0);
                             Impl::Skipper<Impl::Text>::skip(p);
                             if(*p == 0) throw Exception(p - s, "unexpected end");
                             auto q = p - 1;
@@ -655,7 +655,7 @@ private:
                     ++p;
                     if(F & Flag::ClosingTagValidate) {
                     
-                        Corecat::StringView endName(p, 0);
+                        Corecat::StringView8 endName(p, 0);
                         Impl::Skipper<Impl::Name>::skip(p);
                         endName.setLength(p - endName.getData());
                         Impl::Skipper<Impl::Space>::skip(p);
@@ -665,7 +665,7 @@ private:
                         
                     } else {
                         
-                        Corecat::StringView endName(p, name.getLength());
+                        Corecat::StringView8 endName(p, name.getLength());
                         if(endName != name) throw Exception(p - s, "unmatch element type");
                         p += name.getLength();
                         Impl::Skipper<Impl::Space>::skip(p);

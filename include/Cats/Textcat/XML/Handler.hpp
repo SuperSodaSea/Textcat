@@ -41,15 +41,15 @@ public:
     
     void startDocument() {}
     void endDocument() {}
-    void startElement(Corecat::StringView /*name*/) {}
-    void endElement(Corecat::StringView /*name*/) {}
+    void startElement(Corecat::StringView8 /*name*/) {}
+    void endElement(Corecat::StringView8 /*name*/) {}
     void endAttributes(bool /*empty*/) {}
     void doctype() {}
-    void attribute(Corecat::StringView /*name*/, Corecat::StringView /*value*/) {}
-    void text(Corecat::StringView /*value*/) {}
-    void cdata(Corecat::StringView /*value*/) {}
-    void comment(Corecat::StringView /*value*/) {}
-    void processingInstruction(Corecat::StringView /*name*/, Corecat::StringView /*value*/) {}
+    void attribute(Corecat::StringView8 /*name*/, Corecat::StringView8 /*value*/) {}
+    void text(Corecat::StringView8 /*value*/) {}
+    void cdata(Corecat::StringView8 /*value*/) {}
+    void comment(Corecat::StringView8 /*value*/) {}
+    void processingInstruction(Corecat::StringView8 /*name*/, Corecat::StringView8 /*value*/) {}
     
 };
 

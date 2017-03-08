@@ -56,13 +56,13 @@ public:
     
     void startDocument() {}
     void endDocument() {}
-    void startElement(Corecat::StringView name) {
+    void startElement(Corecat::StringView8 name) {
         
         stream->write("<", 1);
         stream->write(name.getData(), name.getLength());
         
     }
-    void endElement(Corecat::StringView name) {
+    void endElement(Corecat::StringView8 name) {
         
         stream->write("</", 2);
         stream->write(name.getData(), name.getLength());
@@ -76,7 +76,7 @@ public:
         
     }
     void doctype() {}
-    void attribute(Corecat::StringView name, Corecat::StringView value) {
+    void attribute(Corecat::StringView8 name, Corecat::StringView8 value) {
         
         stream->write(" ", 1);
         stream->write(name.getData(), name.getLength());
@@ -85,26 +85,26 @@ public:
         stream->write("\"", 1);
         
     }
-    void text(Corecat::StringView value) {
+    void text(Corecat::StringView8 value) {
         
         stream->write(value.getData(), value.getLength());
         
     }
-    void cdata(Corecat::StringView value) {
+    void cdata(Corecat::StringView8 value) {
         
         stream->write("<![CDATA[", 9);
         stream->write(value.getData(), value.getLength());
         stream->write("]]>", 3);
         
     }
-    void comment(Corecat::StringView value) {
+    void comment(Corecat::StringView8 value) {
         
         stream->write("<!--", 4);
         stream->write(value.getData(), value.getLength());
         stream->write("-->", 3);
         
     }
-    void processingInstruction(Corecat::StringView name, Corecat::StringView value) {
+    void processingInstruction(Corecat::StringView8 name, Corecat::StringView8 value) {
         
         stream->write("<?", 2);
         stream->write(name.getData(), name.getLength());

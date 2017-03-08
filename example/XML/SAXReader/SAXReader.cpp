@@ -49,12 +49,12 @@ public:
     
     void startDocument() { level = 0; std::cout << "startDocument()\n"; }
     void endDocument() { std::cout << "endDocument()\n"; }
-    void startElement(StringView name) {
+    void startElement(StringView8 name) {
         
         indent(); std::cout << "startElement(\"" << name << "\")\n"; ++level;
         
     }
-    void endElement(StringView name) {
+    void endElement(StringView8 name) {
         
         --level; indent(); std::cout << "endElement(\"" << name << "\")\n";
         
@@ -65,27 +65,27 @@ public:
         
     }
     void doctype() { indent(); std::cout << "doctype()\n"; }
-    void attribute(StringView name, StringView value) {
+    void attribute(StringView8 name, StringView8 value) {
         
         indent(); std::cout << "attribute(\"" << name << "\", \"" << value << "\")\n";
         
     }
-    void text(StringView value) {
+    void text(StringView8 value) {
         
         indent(); std::cout << "text(\"" << value << "\")\n";
         
     }
-    void cdata(StringView value) {
+    void cdata(StringView8 value) {
         
         indent(); std::cout << "cdata(\"" << value << "\")\n";
         
     }
-    void comment(StringView value) {
+    void comment(StringView8 value) {
         
         indent(); std::cout << "comment(\"" << value << "\")\n";
         
     }
-    void processingInstruction(StringView name, StringView value) {
+    void processingInstruction(StringView8 name, StringView8 value) {
         
         indent(); std::cout << "processingInstruction(\"" << name << "\", \"" << value << "\")\n";
         
