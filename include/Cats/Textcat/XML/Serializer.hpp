@@ -33,8 +33,8 @@
 
 #include <iostream>
 
-#include "Cats/Corecat/Stream.hpp"
 #include "Cats/Corecat/String.hpp"
+#include "Cats/Corecat/Stream/OutputStream.hpp"
 
 #include "Handler.hpp"
 
@@ -47,22 +47,28 @@ class Serializer : public HandlerBase {
     
 private:
     
-    Corecat::Stream::Stream<>* stream;
+    using StringView8 = Cats::Corecat::StringView8;
+    template <typename T>
+    using OutputStream = Cats::Corecat::Stream::OutputStream<T>;
+    
+private:
+    
+    OutputStream<char>* stream;
     
 public:
     
     Serializer() = default;
-    Serializer(Corecat::Stream::Stream<>& stream_) : stream(&stream_) { assert(stream->isWriteable()); }
+    Serializer(OutputStream<char>& stream_) : stream(&stream_) { assert(stream->isWriteable()); }
     
     void startDocument() {}
     void endDocument() {}
-    void startElement(Corecat::StringView8 name) {
+    void startElement(StringView8 name) {
         
         stream->write("<", 1);
         stream->write(name.getData(), name.getLength());
         
     }
-    void endElement(Corecat::StringView8 name) {
+    void endElement(StringView8 name) {
         
         stream->write("</", 2);
         stream->write(name.getData(), name.getLength());
@@ -76,7 +82,7 @@ public:
         
     }
     void doctype() {}
-    void attribute(Corecat::StringView8 name, Corecat::StringView8 value) {
+    void attribute(StringView8 name, StringView8 value) {
         
         stream->write(" ", 1);
         stream->write(name.getData(), name.getLength());
@@ -85,26 +91,26 @@ public:
         stream->write("\"", 1);
         
     }
-    void text(Corecat::StringView8 value) {
+    void text(StringView8 value) {
         
         stream->write(value.getData(), value.getLength());
         
     }
-    void cdata(Corecat::StringView8 value) {
+    void cdata(StringView8 value) {
         
         stream->write("<![CDATA[", 9);
         stream->write(value.getData(), value.getLength());
         stream->write("]]>", 3);
         
     }
-    void comment(Corecat::StringView8 value) {
+    void comment(StringView8 value) {
         
         stream->write("<!--", 4);
         stream->write(value.getData(), value.getLength());
         stream->write("-->", 3);
         
     }
-    void processingInstruction(Corecat::StringView8 name, Corecat::StringView8 value) {
+    void processingInstruction(StringView8 name, StringView8 value) {
         
         stream->write("<?", 2);
         stream->write(name.getData(), name.getLength());
@@ -114,8 +120,8 @@ public:
         
     }
     
-    Corecat::Stream::Stream<>& getStream() { return *stream; }
-    void setStream(Corecat::Stream::Stream<>& stream_) { stream = &stream_; }
+    OutputStream<char>& getStream() { return *stream; }
+    void setStream(OutputStream<char>& stream_) { stream = &stream_; }
     
 };
 

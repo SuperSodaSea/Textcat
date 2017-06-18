@@ -212,21 +212,25 @@ class Attribute : public Impl::List<Attribute>::ListElement {
     
 private:
     
-    Corecat::StringView8 name;
-    Corecat::StringView8 value;
+    using StringView8 = Cats::Corecat::StringView8;
+    
+private:
+    
+    StringView8 name;
+    StringView8 value;
     
 public:
     
     Attribute() : Impl::List<Attribute>::ListElement(), name(), value() {}
-    Attribute(Corecat::StringView8 name_, Corecat::StringView8 value_) :
+    Attribute(StringView8 name_, StringView8 value_) :
         Impl::List<Attribute>::ListElement(), name(name_), value(value_) {}
     Attribute(const Attribute& src) = delete;
     ~Attribute() = default;
     
-    Corecat::StringView8 getName() const { return name; }
-    void setName(Corecat::StringView8 name_) { name = name_; }
-    Corecat::StringView8 getValue() const { return value; }
-    void setValue(Corecat::StringView8 value_) { value = value_; }
+    StringView8 getName() const { return name; }
+    void setName(StringView8 name_) { name = name_; }
+    StringView8 getValue() const { return value; }
+    void setValue(StringView8 value_) { value = value_; }
 
 };
 
@@ -234,20 +238,24 @@ class Element : public Node {
     
 private:
     
+    using StringView8 = Cats::Corecat::StringView8;
+    
+private:
+    
     Impl::List<Attribute> listAttr;
-    Corecat::StringView8 name;
+    StringView8 name;
     
 public:
     
     Element() : Node(Type::Element), listAttr(), name() {}
-    Element(Corecat::StringView8 name_) : Node(Type::Element), listAttr(), name(name_) {}
+    Element(StringView8 name_) : Node(Type::Element), listAttr(), name(name_) {}
     Element(const Element& src) = delete;
     ~Element() = default;
     
     Impl::List<Attribute>& attribute() { return listAttr; }
     
-    Corecat::StringView8 getName() const { return name; }
-    void setName(Corecat::StringView8 name_) { name = name_; }
+    StringView8 getName() const { return name; }
+    void setName(StringView8 name_) { name = name_; }
     
     Attribute& getFirstAttribute() { return listAttr.getFirst(); }
     Attribute& getLastAttribute() { return listAttr.getLast(); }
@@ -260,17 +268,21 @@ class Text : public Node {
     
 private:
     
-    Corecat::StringView8 value;
+    using StringView8 = Cats::Corecat::StringView8;
+    
+private:
+    
+    StringView8 value;
     
 public:
     
     Text() : Node(Type::Text), value() {}
-    Text(Corecat::StringView8 value_) : Node(Type::Text), value(value_) {}
+    Text(StringView8 value_) : Node(Type::Text), value(value_) {}
     Text(const Text& src) = delete;
     ~Text() = default;
     
-    Corecat::StringView8 getValue() const { return value; }
-    void setValue(Corecat::StringView8 value_) { value = value_; }
+    StringView8 getValue() const { return value; }
+    void setValue(StringView8 value_) { value = value_; }
     
 };
 
@@ -278,17 +290,21 @@ class CDATA : public Node {
     
 private:
     
-    Corecat::StringView8 value;
+    using StringView8 = Cats::Corecat::StringView8;
+    
+private:
+    
+    StringView8 value;
     
 public:
     
     CDATA() : Node(Type::CDATA), value() {}
-    CDATA(Corecat::StringView8 value_) : Node(Type::CDATA), value(value_) {}
+    CDATA(StringView8 value_) : Node(Type::CDATA), value(value_) {}
     CDATA(const CDATA& src) = delete;
     ~CDATA() = default;
     
-    Corecat::StringView8 getValue() const { return value; }
-    void setValue(Corecat::StringView8 value_) { value = value_; }
+    StringView8 getValue() const { return value; }
+    void setValue(StringView8 value_) { value = value_; }
     
 };
 
@@ -296,17 +312,21 @@ class Comment : public Node {
     
 private:
     
-    Corecat::StringView8 value;
+    using StringView8 = Cats::Corecat::StringView8;
+    
+private:
+    
+    StringView8 value;
     
 public:
     
     Comment() : Node(Type::Comment), value() {}
-    Comment(Corecat::StringView8 value_) : Node(Type::Comment), value(value_) {}
+    Comment(StringView8 value_) : Node(Type::Comment), value(value_) {}
     Comment(const Comment& src) = delete;
     ~Comment() = default;
     
-    Corecat::StringView8 getValue() const { return value; }
-    void setValue(Corecat::StringView8 value_) { value = value_; }
+    StringView8 getValue() const { return value; }
+    void setValue(StringView8 value_) { value = value_; }
     
 };
 
@@ -314,25 +334,35 @@ class ProcessingInstruction : public Node {
     
 private:
     
-    Corecat::StringView8 name;
-    Corecat::StringView8 value;
+    using StringView8 = Cats::Corecat::StringView8;
+    
+private:
+    
+    StringView8 name;
+    StringView8 value;
     
 public:
     
     ProcessingInstruction() : Node(Type::ProcessingInstruction), name(), value() {};
-    ProcessingInstruction(Corecat::StringView8& name_, Corecat::StringView8& value_) :
+    ProcessingInstruction(StringView8& name_, StringView8& value_) :
         Node(Type::ProcessingInstruction), name(name_), value(value_) {}
     ProcessingInstruction(const ProcessingInstruction& src) = delete;
     ~ProcessingInstruction() = default;
     
-    Corecat::StringView8 getName() const { return name; }
-    void setName(Corecat::StringView8 name_) { name = name_; }
-    Corecat::StringView8 getValue() const { return value; }
-    void setValue(Corecat::StringView8 value_) { value = value_; }
+    StringView8 getName() const { return name; }
+    void setName(StringView8 name_) { name = name_; }
+    StringView8 getValue() const { return value; }
+    void setValue(StringView8 value_) { value = value_; }
     
 };
 
 class Document : public Node {
+    
+private:
+    
+    using StringView8 = Cats::Corecat::StringView8;
+    template <typename T>
+    using OutputStream = Cats::Corecat::Stream::OutputStream<T>;
     
 public:
     
@@ -361,32 +391,32 @@ public:
     Document(const Document& src) = delete;
     ~Document() = default;
     
-    Element& createElement(Corecat::StringView8 name) {
+    Element& createElement(StringView8 name) {
         
         return *new(memoryPool.allocate(sizeof(Element))) Element(name);
         
     }
-    Attribute& createAttribute(Corecat::StringView8 name, Corecat::StringView8 value) {
+    Attribute& createAttribute(StringView8 name, StringView8 value) {
         
         return *new(memoryPool.allocate(sizeof(Attribute))) Attribute(name, value);
         
     }
-    Text& createText(Corecat::StringView8 value) {
+    Text& createText(StringView8 value) {
         
         return *new(memoryPool.allocate(sizeof(Text))) Text(value);
         
     }
-    CDATA& createCDATA(Corecat::StringView8 value) {
+    CDATA& createCDATA(StringView8 value) {
         
         return *new(memoryPool.allocate(sizeof(CDATA))) CDATA(value);
         
     }
-    Comment& createComment(Corecat::StringView8 value) {
+    Comment& createComment(StringView8 value) {
         
         return *new(memoryPool.allocate(sizeof(Comment))) Comment(value);
         
     }
-    ProcessingInstruction& createProcessingInstruction(Corecat::StringView8 name, Corecat::StringView8 value) {
+    ProcessingInstruction& createProcessingInstruction(StringView8 name, StringView8 value) {
         
         return *new(memoryPool.allocate(sizeof(ProcessingInstruction))) ProcessingInstruction(name, value);
         
@@ -420,14 +450,14 @@ public:
             Handler(Document* document_) : document(document_), cur(nullptr) {}
             
             void startDocument() { cur = document; }
-            void startElement(Corecat::StringView8 name) {
+            void startElement(StringView8 name) {
                 
                 auto& element = document->createElement(name);
                 cur->appendChild(element);
                 cur = &element;
                 
             }
-            void endElement(Corecat::StringView8 /*name*/) {
+            void endElement(StringView8 /*name*/) {
                 
                 cur = cur->parent;
                 
@@ -437,27 +467,27 @@ public:
                 if(empty) cur = cur->parent;
                 
             }
-            void attribute(Corecat::StringView8 name, Corecat::StringView8 value) {
+            void attribute(StringView8 name, StringView8 value) {
                 
                 static_cast<Element*>(cur)->appendAttribute(document->createAttribute(name, value));
                 
             }
-            void text(Corecat::StringView8 value) {
+            void text(StringView8 value) {
                 
                 cur->appendChild(document->createText(value));
                 
             }
-            void cdata(Corecat::StringView8 value) {
+            void cdata(StringView8 value) {
                 
                 cur->appendChild(document->createCDATA(value));
                 
             }
-            void comment(Corecat::StringView8 value) {
+            void comment(StringView8 value) {
                 
                 cur->appendChild(document->createComment(value));
                 
             }
-            void processingInstruction(Corecat::StringView8 name, Corecat::StringView8 value) {
+            void processingInstruction(StringView8 name, StringView8 value) {
                 
                 cur->appendChild(document->createProcessingInstruction(name, value));
                 
@@ -474,7 +504,7 @@ public:
         
     }
     
-    void serialize(Corecat::Stream::Stream<>& stream) {
+    void serialize(OutputStream<char>& stream) {
         
         Serializer serializer(stream);
         serializer.startDocument();
@@ -553,7 +583,7 @@ public:
 
 inline std::ostream& operator <<(std::ostream& stream, Document& document) {
     
-    auto wrapper = Corecat::Stream::createWrapperStream(stream);
+    auto wrapper = Corecat::Stream::createWrapperOutputStream(stream);
     document.serialize(wrapper);
     return stream;
     
