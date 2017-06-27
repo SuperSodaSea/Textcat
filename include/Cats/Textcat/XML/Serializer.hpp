@@ -58,7 +58,7 @@ private:
 public:
     
     Serializer() = default;
-    Serializer(OutputStream<char>& stream_) : stream(&stream_) { assert(stream->isWriteable()); }
+    Serializer(OutputStream<char>& stream_) : stream(&stream_) {}
     
     void startDocument() {}
     void endDocument() {}

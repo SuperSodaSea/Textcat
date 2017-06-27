@@ -36,11 +36,10 @@ using namespace Cats::Textcat;
 
 void readFile(const char* name, std::vector<char>& data) {
     
-    std::size_t size;
     std::ifstream is(name, std::ios::binary);
     if(!is) throw std::runtime_error("can't read file");
     is.seekg(0, std::ios::end);
-    size = is.tellg();
+    std::size_t size = static_cast<std::size_t>(is.tellg());
     is.seekg(0);
     data.resize(size + 1);
     is.read(data.data(), size);
@@ -49,8 +48,6 @@ void readFile(const char* name, std::vector<char>& data) {
 }
 
 int main(int argc, char** argv) {
-    
-    std::ios::sync_with_stdio(false);
     
     if(argc < 2) {
         

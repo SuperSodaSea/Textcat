@@ -32,8 +32,6 @@ using namespace Cats::Textcat;
 
 int main() {
     
-    std::ios::sync_with_stdio(false);
-    
     XML::Document document;
     XML::Element list("list"); document.appendChild(list);
         XML::Element person("person"); list.appendChild(person);
