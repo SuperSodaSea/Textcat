@@ -47,14 +47,14 @@ namespace Impl {
 template <typename T, T... V>
 struct Include {
     
-    static constexpr bool get(T t) { return Corecat::Sequence::Contain<Corecat::Sequence::Sequence<T, V...>>::get(t); }
+    static constexpr bool get(T t) { using namespace Cats::Corecat::Sequence; return ContainSequence<Sequence<T, V...>>::get(t); }
     
 };
 
 template <typename T, T... V>
 struct Exclude {
     
-    static constexpr bool get(T t) { return !Corecat::Sequence::Contain<Corecat::Sequence::Sequence<T, V...>>::get(t); }
+    static constexpr bool get(T t) { using namespace Cats::Corecat::Sequence; return !ContainSequence<Sequence<T, V...>>::get(t); }
     
 };
 
@@ -64,14 +64,10 @@ struct Skipper {
     
     static size_t skip(char*& p) {
         
-        using namespace Corecat::Sequence;
+        using namespace Cats::Corecat::Sequence;
         
         auto t = p;
-        while(Table<Mapper<Cond, Index<unsigned char, 0, 255>>>::get(*t)) {
-            
-            ++t;
-            
-        }
+        while(SequenceTable<MapperSequence<Cond, IndexSequence<unsigned char, 0, 255>>>::get(*t)) ++t;
         const size_t length = t - p;
         p = t;
         return length;
@@ -119,6 +115,8 @@ struct Hexadecimal {
 
 
 class Parser {
+    
+    using StringView8 = Cats::Corecat::StringView8;
     
 public:
     
@@ -170,7 +168,7 @@ private:
     template <Flag F>
     void parseReference(char*& q) {
         
-        using namespace Corecat::Sequence;
+        using namespace Cats::Corecat::Sequence;
         
         switch(p[1]) {
         
@@ -182,7 +180,7 @@ private:
                 p += 3;
                 if(*p == ';') throw Exception(p - s, "unexpected ;");
                 std::uint32_t code = 0;
-                for(unsigned char t; (t = Table<Mapper<Impl::Hexadecimal, Index<unsigned char, 0, 255>>>::get(*p)) != 255; code = code * 16 + t, ++p);
+                for(unsigned char t; (t = SequenceTable<MapperSequence<Impl::Hexadecimal, IndexSequence<unsigned char, 0, 255>>>::get(*p)) != 255; code = code * 16 + t, ++p);
                 if(*p != ';') throw Exception(p - s, "expected ;");
                 ++p;
                 // TODO: Code conversion
@@ -194,7 +192,7 @@ private:
                 p += 2;
                 if(*p == ';') throw Exception(p - s, "unexpected ;");
                 std::uint32_t code = 0;
-                for(unsigned char t; (t = Table<Mapper<Impl::Decimal, Index<unsigned char, 0, 255>>>::get(*p)) != 255; code = code * 10 + t, ++p);
+                for(unsigned char t; (t = SequenceTable<MapperSequence<Impl::Decimal, IndexSequence<unsigned char, 0, 255>>>::get(*p)) != 255; code = code * 10 + t, ++p);
                 if(*p != ';') throw Exception(p - s, "expected ;");
                 ++p;
                 // TODO: Code conversion
@@ -283,7 +281,7 @@ private:
     template <Flag F, typename H>
     void parseXMLDeclaration(H& /*handler*/) {
         
-        using namespace Corecat::Sequence;
+        using namespace Cats::Corecat::Sequence;
         
         Impl::Skipper<Impl::Space>::skip(p);
         
@@ -310,7 +308,7 @@ private:
         } else throw Exception(p - s, "expected \" or '");
         ++p;
         
-        if(*p != '?' && !Table<Mapper<Impl::Space, Index<unsigned char, 0, 255>>>::get(*p))
+        if(*p != '?' && !SequenceTable<MapperSequence<Impl::Space, IndexSequence<unsigned char, 0, 255>>>::get(*p))
             throw Exception(p - s, "unexpected character");
         Impl::Skipper<Impl::Space>::skip(p);
         
@@ -339,7 +337,7 @@ private:
             
         }
         
-        if(*p != '?' && !Table<Mapper<Impl::Space, Index<unsigned char, 0, 255>>>::get(*p))
+        if(*p != '?' && !SequenceTable<MapperSequence<Impl::Space, IndexSequence<unsigned char, 0, 255>>>::get(*p))
             throw Exception(p - s, "unexpected character");
         Impl::Skipper<Impl::Space>::skip(p);
         
@@ -382,7 +380,7 @@ private:
     template <Flag F, typename H>
     void parseComment(H& handler) {
         
-        Corecat::StringView8 comment(p, 0);
+        StringView8 comment(p, 0);
         // Until "-->"
         while(*p && (p[0] != '-' || p[1] != '-' || p[2] != '>')) ++p;
         if(!*p) throw Exception(p - s, "unexpected end");
@@ -394,13 +392,13 @@ private:
     template <Flag F, typename H>
     void parseProcessingInstruction(H& handler) {
         
-        Corecat::StringView8 target(p, 0);
+        StringView8 target(p, 0);
         target.setLength(Impl::Skipper<Impl::Name>::skip(p));
         if(!target.getLength()) throw Exception(p - s, "expected PI target");
         if((p[0] != '?' || p[1] != '>') && !Impl::Skipper<Impl::Space>::skip(p))
             throw Exception(p - s, "expected space");
         
-        Corecat::StringView8 content(p, 0);
+        StringView8 content(p, 0);
         // Until "?>"
         while(*p && (p[0] != '?' || p[1] != '>')) ++p;
         if(!*p) throw Exception(p - s, "unexpected end");
@@ -413,7 +411,7 @@ private:
     template <Flag F, typename H>
     void parseCDATA(H& handler) {
         
-        Corecat::StringView8 text(p, 0);
+        StringView8 text(p, 0);
         // Until "]]>"
         while(*p && (p[0] != ']' || p[1] != ']' || p[2] != '>')) ++p;
         if(!*p) throw Exception(p - s, "unexpected end");
@@ -425,10 +423,10 @@ private:
     template <Flag F, typename H>
     void parseElement(H& handler) {
         
-        using namespace Corecat::Sequence;
+        using namespace Cats::Corecat::Sequence;
         
         // Parse element type
-        Corecat::StringView8 name(p, 0);
+        StringView8 name(p, 0);
         name.setLength(Impl::Skipper<Impl::Name>::skip(p));
         if(!name.getLength()) throw Exception(p - s, "expected element type");
         bool empty = false;
@@ -449,10 +447,10 @@ private:
             ++p;
             handler.startElement(name);
             Impl::Skipper<Impl::Space>::skip(p);
-            while(Table<Mapper<Impl::AttributeName, Index<unsigned char, 0, 255>>>::get(*p)) {
+            while(SequenceTable<MapperSequence<Impl::AttributeName, IndexSequence<unsigned char, 0, 255>>>::get(*p)) {
                 
                 // Parse attribute name
-                Corecat::StringView8 name(p, 0);
+                StringView8 name(p, 0);
                 name.setLength(Impl::Skipper<Impl::AttributeName>::skip(p));
                 if(!name.getLength()) throw Exception(p - s, "expected attribute name");
                 Impl::Skipper<Impl::Space>::skip(p);
@@ -461,11 +459,11 @@ private:
                 Impl::Skipper<Impl::Space>::skip(p);
                 
                 // Parse attribute value
-                Corecat::StringView8 value;
+                StringView8 value;
                 if(*p == '"') {
                     
                     ++p;
-                    value.setData(p);
+                    value.setData(p, 0);
                     if(F & Flag::EntityTranslation) {
                         
                         auto q = p;
@@ -492,7 +490,7 @@ private:
                 } else if(*p == '\'') {
                     
                     ++p;
-                    value.setData(p);
+                    value.setData(p, 0);
                     if(F & Flag::EntityTranslation) {
                         
                         auto q = p;
@@ -548,7 +546,7 @@ private:
                         
                         if(F & Flag::NormalizeSpace) {
                             
-                            Corecat::StringView8 text(p, 0);
+                            StringView8 text(p, 0);
                             auto q = p;
                             while(true) {
                                 
@@ -567,7 +565,7 @@ private:
                             
                         } else {
                             
-                            Corecat::StringView8 text(p, 0);
+                            StringView8 text(p, 0);
                             auto q = p;
                             while(true) {
                                 
@@ -581,7 +579,7 @@ private:
                             }
                             --q;
                             if(F & Flag::TrimSpace)
-                                for(; Table<Mapper<Impl::Space, Index<unsigned char, 0, 255>>>::get(*q); --q);
+                                for(; SequenceTable<MapperSequence<Impl::Space, IndexSequence<unsigned char, 0, 255>>>::get(*q); --q);
                             ++q;
                             text.setLength(q - text.getData());
                             handler.text(text);
@@ -592,7 +590,7 @@ private:
                         
                         if(F & Flag::NormalizeSpace) {
                             
-                            Corecat::StringView8 text(p, 0);
+                            StringView8 text(p, 0);
                             auto q = p;
                             while(true) {
                                 
@@ -606,19 +604,19 @@ private:
                             }
                             --q;
                             if(F & Flag::TrimSpace)
-                                for(; Table<Mapper<Impl::Space, Index<unsigned char, 0, 255>>>::get(*q); --q);
+                                for(; SequenceTable<MapperSequence<Impl::Space, IndexSequence<unsigned char, 0, 255>>>::get(*q); --q);
                             ++q;
                             text.setLength(q - text.getData());
                             handler.text(text);
                             
                         } else {
                             
-                            Corecat::StringView8 text(p, 0);
+                            StringView8 text(p, 0);
                             Impl::Skipper<Impl::Text>::skip(p);
                             if(*p == 0) throw Exception(p - s, "unexpected end");
                             auto q = p - 1;
                             if(F & Flag::TrimSpace)
-                                for(; Table<Mapper<Impl::Space, Index<unsigned char, 0, 255>>>::get(*q); --q);
+                                for(; SequenceTable<MapperSequence<Impl::Space, IndexSequence<unsigned char, 0, 255>>>::get(*q); --q);
                             ++q;
                             text.setLength(q - text.getData());
                             handler.text(text);
@@ -655,7 +653,7 @@ private:
                     ++p;
                     if(F & Flag::ClosingTagValidate) {
                     
-                        Corecat::StringView8 endName(p, 0);
+                        StringView8 endName(p, 0);
                         Impl::Skipper<Impl::Name>::skip(p);
                         endName.setLength(p - endName.getData());
                         Impl::Skipper<Impl::Space>::skip(p);
@@ -665,7 +663,7 @@ private:
                         
                     } else {
                         
-                        Corecat::StringView8 endName(p, name.getLength());
+                        StringView8 endName(p, name.getLength());
                         if(endName != name) throw Exception(p - s, "unmatch element type");
                         p += name.getLength();
                         Impl::Skipper<Impl::Space>::skip(p);
@@ -707,7 +705,7 @@ public:
     template <Flag F = Flag::Default, typename H>
     void parse(char* data, H& handler) {
         
-        using namespace Corecat::Sequence;
+        using namespace Cats::Corecat::Sequence;
         
         assert(data);
         
@@ -725,7 +723,7 @@ public:
         }
         
         // Parse XML declaration
-        if(p[0] == '<' && p[1] == '?' && p[2] == 'x' && p[3] == 'm' && p[4] == 'l' && Table<Mapper<Impl::Space, Index<unsigned char, 0, 255>>>::get(p[5])) {
+        if(p[0] == '<' && p[1] == '?' && p[2] == 'x' && p[3] == 'm' && p[4] == 'l' && SequenceTable<MapperSequence<Impl::Space, IndexSequence<unsigned char, 0, 255>>>::get(p[5])) {
             
             // "<?xml "
             p += 6;

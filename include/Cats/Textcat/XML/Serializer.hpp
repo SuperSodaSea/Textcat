@@ -64,59 +64,59 @@ public:
     void endDocument() {}
     void startElement(StringView8 name) {
         
-        stream->write("<", 1);
-        stream->write(name.getData(), name.getLength());
+        stream->writeAll("<", 1);
+        stream->writeAll(name.getData(), name.getLength());
         
     }
     void endElement(StringView8 name) {
         
-        stream->write("</", 2);
-        stream->write(name.getData(), name.getLength());
-        stream->write(">", 1);
+        stream->writeAll("</", 2);
+        stream->writeAll(name.getData(), name.getLength());
+        stream->writeAll(">", 1);
         
     }
     void endAttributes(bool empty) {
         
-        if(empty) stream->write("/>", 2);
-        else stream->write(">", 1);
+        if(empty) stream->writeAll("/>", 2);
+        else stream->writeAll(">", 1);
         
     }
     void doctype() {}
     void attribute(StringView8 name, StringView8 value) {
         
-        stream->write(" ", 1);
-        stream->write(name.getData(), name.getLength());
-        stream->write("=\"", 2);
-        stream->write(value.getData(), value.getLength());
-        stream->write("\"", 1);
+        stream->writeAll(" ", 1);
+        stream->writeAll(name.getData(), name.getLength());
+        stream->writeAll("=\"", 2);
+        stream->writeAll(value.getData(), value.getLength());
+        stream->writeAll("\"", 1);
         
     }
     void text(StringView8 value) {
         
-        stream->write(value.getData(), value.getLength());
+        stream->writeAll(value.getData(), value.getLength());
         
     }
     void cdata(StringView8 value) {
         
-        stream->write("<![CDATA[", 9);
-        stream->write(value.getData(), value.getLength());
-        stream->write("]]>", 3);
+        stream->writeAll("<![CDATA[", 9);
+        stream->writeAll(value.getData(), value.getLength());
+        stream->writeAll("]]>", 3);
         
     }
     void comment(StringView8 value) {
         
-        stream->write("<!--", 4);
-        stream->write(value.getData(), value.getLength());
-        stream->write("-->", 3);
+        stream->writeAll("<!--", 4);
+        stream->writeAll(value.getData(), value.getLength());
+        stream->writeAll("-->", 3);
         
     }
     void processingInstruction(StringView8 name, StringView8 value) {
         
-        stream->write("<?", 2);
-        stream->write(name.getData(), name.getLength());
-        stream->write(" ", 1);
-        stream->write(value.getData(), value.getLength());
-        stream->write("?>", 2);
+        stream->writeAll("<?", 2);
+        stream->writeAll(name.getData(), name.getLength());
+        stream->writeAll(" ", 1);
+        stream->writeAll(value.getData(), value.getLength());
+        stream->writeAll("?>", 2);
         
     }
     
