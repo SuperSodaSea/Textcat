@@ -157,14 +157,14 @@ public:
 
 }
 
-enum class Type : uint16_t {
+enum class XMLNodeType : uint16_t {
     
-    XMLElement,
-    XMLText,
-    XMLCDATA,
-    XMLComment,
-    XMLProcessingInstruction,
-    XMLDocument,
+    Element,
+    Text,
+    CDATA,
+    Comment,
+    ProcessingInstruction,
+    Document,
     
 };
 
@@ -172,16 +172,16 @@ class XMLNode : public Impl::List<XMLNode>::ListElement {
     
 private:
     
-    const Type type;
+    const XMLNodeType type;
     Impl::List<XMLNode> listChild;
     
 public:
     
-    XMLNode(Type type_) : Impl::List<XMLNode>::ListElement(), type(type_), listChild() {}
+    XMLNode(XMLNodeType type_) : Impl::List<XMLNode>::ListElement(), type(type_), listChild() {}
     XMLNode(const XMLNode& src) = delete;
     ~XMLNode() = default;
     
-    Type getType() const { return type; }
+    XMLNodeType getType() const { return type; }
     
     Impl::List<XMLNode>& child() { return listChild; }
     
@@ -247,8 +247,8 @@ private:
     
 public:
     
-    XMLElement() : XMLNode(Type::XMLElement), listAttr(), name() {}
-    XMLElement(StringView8 name_) : XMLNode(Type::XMLElement), listAttr(), name(name_) {}
+    XMLElement() : XMLNode(XMLNodeType::Element), listAttr(), name() {}
+    XMLElement(StringView8 name_) : XMLNode(XMLNodeType::Element), listAttr(), name(name_) {}
     XMLElement(const XMLElement& src) = delete;
     ~XMLElement() = default;
     
@@ -276,8 +276,8 @@ private:
     
 public:
     
-    XMLText() : XMLNode(Type::XMLText), value() {}
-    XMLText(StringView8 value_) : XMLNode(Type::XMLText), value(value_) {}
+    XMLText() : XMLNode(XMLNodeType::Text), value() {}
+    XMLText(StringView8 value_) : XMLNode(XMLNodeType::Text), value(value_) {}
     XMLText(const XMLText& src) = delete;
     ~XMLText() = default;
     
@@ -298,8 +298,8 @@ private:
     
 public:
     
-    XMLCDATA() : XMLNode(Type::XMLCDATA), value() {}
-    XMLCDATA(StringView8 value_) : XMLNode(Type::XMLCDATA), value(value_) {}
+    XMLCDATA() : XMLNode(XMLNodeType::CDATA), value() {}
+    XMLCDATA(StringView8 value_) : XMLNode(XMLNodeType::CDATA), value(value_) {}
     XMLCDATA(const XMLCDATA& src) = delete;
     ~XMLCDATA() = default;
     
@@ -320,8 +320,8 @@ private:
     
 public:
     
-    XMLComment() : XMLNode(Type::XMLComment), value() {}
-    XMLComment(StringView8 value_) : XMLNode(Type::XMLComment), value(value_) {}
+    XMLComment() : XMLNode(XMLNodeType::Comment), value() {}
+    XMLComment(StringView8 value_) : XMLNode(XMLNodeType::Comment), value(value_) {}
     XMLComment(const XMLComment& src) = delete;
     ~XMLComment() = default;
     
@@ -343,9 +343,9 @@ private:
     
 public:
     
-    XMLProcessingInstruction() : XMLNode(Type::XMLProcessingInstruction), name(), value() {};
+    XMLProcessingInstruction() : XMLNode(XMLNodeType::ProcessingInstruction), name(), value() {};
     XMLProcessingInstruction(StringView8& name_, StringView8& value_) :
-        XMLNode(Type::XMLProcessingInstruction), name(name_), value(value_) {}
+        XMLNode(XMLNodeType::ProcessingInstruction), name(name_), value(value_) {}
     XMLProcessingInstruction(const XMLProcessingInstruction& src) = delete;
     ~XMLProcessingInstruction() = default;
     
@@ -387,7 +387,7 @@ private:
     
 public:
     
-    XMLDocument() : XMLNode(Type::XMLDocument), memoryPool() {}
+    XMLDocument() : XMLNode(XMLNodeType::Document), memoryPool() {}
     XMLDocument(const XMLDocument& src) = delete;
     ~XMLDocument() = default;
     
@@ -430,7 +430,7 @@ public:
     
     XMLElement& getRootElement() {
         
-        for(auto& node : child()) if(node.getType() == Type::XMLElement) return static_cast<XMLElement&>(node);
+        for(auto& node : child()) if(node.getType() == XMLNodeType::Element) return static_cast<XMLElement&>(node);
         throw Exception("root element not found");
         
     }
@@ -515,7 +515,7 @@ public:
                 
                 switch(cur->getType()) {
                 
-                case Type::XMLElement: {
+                case XMLNodeType::Element: {
                     
                     auto& element = static_cast<XMLElement&>(*cur);
                     serializer.startElement(element.getName());
@@ -530,28 +530,28 @@ public:
                     break;
                     
                 }
-                case Type::XMLText: {
+                case XMLNodeType::Text: {
                     
                     auto& text = static_cast<XMLText&>(*cur);
                     serializer.text(text.getValue());
                     break;
                     
                 }
-                case Type::XMLCDATA: {
+                case XMLNodeType::CDATA: {
                     
                     auto& cdata = static_cast<XMLCDATA&>(*cur);
                     serializer.cdata(cdata.getValue());
                     break;
                     
                 }
-                case Type::XMLComment: {
+                case XMLNodeType::Comment: {
                     
                     auto& comment = static_cast<XMLComment&>(*cur);
                     serializer.comment(comment.getValue());
                     break;
                     
                 }
-                case Type::XMLProcessingInstruction: {
+                case XMLNodeType::ProcessingInstruction: {
                     
                     auto& pi = static_cast<XMLProcessingInstruction&>(*cur);
                     serializer.processingInstruction(pi.getName(), pi.getValue());
