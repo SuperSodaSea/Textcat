@@ -47,13 +47,13 @@ namespace Cats {
 namespace Textcat{
 namespace XML {
 
-class Node;
-class Element;
-class Text;
-class CDATA;
-class Comment;
-class ProcessingInstruction;
-class Document;
+class XMLNode;
+class XMLElement;
+class XMLText;
+class XMLCDATA;
+class XMLComment;
+class XMLProcessingInstruction;
+class XMLDocument;
 
 namespace Impl {
 
@@ -66,7 +66,7 @@ public:
         
         T* prev;
         T* next;
-        Node* parent;
+        XMLNode* parent;
         
         ListElement() : prev(), next(), parent() {}
         
@@ -87,7 +87,7 @@ public:
         T& operator *() const { return static_cast<T&>(*p); }
         T* operator ->() const { return static_cast<T*>(p); }
         bool operator ==(const Iterator& it) { return p == it.p; }
-        bool operator ==(Node* q) { return p == q; }
+        bool operator ==(XMLNode* q) { return p == q; }
         bool operator !=(const Iterator& it) { return p != it.p; }
         Iterator& operator ++() { p = p->next; return *this; }
         Iterator operator ++(int) { Iterator tmp = *this; ++*this; return tmp; }
@@ -107,7 +107,7 @@ public:
     List(const List& src) = delete;
     ~List() = default;
     
-    T& append(Node& parent, T& child) {
+    T& append(XMLNode& parent, T& child) {
         
         assert(!child.parent);
         if(first) { child.prev = last; last->next = &child; last = &child; }
@@ -159,56 +159,56 @@ public:
 
 enum class Type : uint16_t {
     
-    Element,
-    Text,
-    CDATA,
-    Comment,
-    ProcessingInstruction,
-    Document,
+    XMLElement,
+    XMLText,
+    XMLCDATA,
+    XMLComment,
+    XMLProcessingInstruction,
+    XMLDocument,
     
 };
 
-class Node : public Impl::List<Node>::ListElement {
+class XMLNode : public Impl::List<XMLNode>::ListElement {
     
 private:
     
     const Type type;
-    Impl::List<Node> listChild;
+    Impl::List<XMLNode> listChild;
     
 public:
     
-    Node(Type type_) : Impl::List<Node>::ListElement(), type(type_), listChild() {}
-    Node(const Node& src) = delete;
-    ~Node() = default;
+    XMLNode(Type type_) : Impl::List<XMLNode>::ListElement(), type(type_), listChild() {}
+    XMLNode(const XMLNode& src) = delete;
+    ~XMLNode() = default;
     
     Type getType() const { return type; }
     
-    Impl::List<Node>& child() { return listChild; }
+    Impl::List<XMLNode>& child() { return listChild; }
     
-    Node& getFirstChild() { return listChild.getFirst(); }
-    Node& getLastChild() { return listChild.getLast(); }
+    XMLNode& getFirstChild() { return listChild.getFirst(); }
+    XMLNode& getLastChild() { return listChild.getLast(); }
     
-    Node& appendChild(Node& child) { return listChild.append(*this, child); }
-    Node& insertBefore(Node& child, Node& ref) { return listChild.insertBefore(child, ref); }
-    Node& removeChild(Node& child) { return listChild.remove(child); }
+    XMLNode& appendChild(XMLNode& child) { return listChild.append(*this, child); }
+    XMLNode& insertBefore(XMLNode& child, XMLNode& ref) { return listChild.insertBefore(child, ref); }
+    XMLNode& removeChild(XMLNode& child) { return listChild.remove(child); }
     bool hasChildNodes() { return !listChild.empty(); }
     
-    Element& asElement() noexcept { return reinterpret_cast<Element&>(*this); }
-    const Element& asElement() const noexcept { return reinterpret_cast<const Element&>(*this); }
-    Text& asText() noexcept { return reinterpret_cast<Text&>(*this); }
-    const Text& asText() const noexcept { return reinterpret_cast<const Text&>(*this); }
-    CDATA& asCDATA() noexcept { return reinterpret_cast<CDATA&>(*this); }
-    const CDATA& asCDATA() const noexcept { return reinterpret_cast<const CDATA&>(*this); }
-    Comment& asComment() noexcept { return reinterpret_cast<Comment&>(*this); }
-    const Comment& asComment() const noexcept { return reinterpret_cast<const Comment&>(*this); }
-    ProcessingInstruction& asProcessingInstruction() noexcept { return reinterpret_cast<ProcessingInstruction&>(*this); }
-    const ProcessingInstruction& asProcessingInstruction() const noexcept { return reinterpret_cast<const ProcessingInstruction&>(*this); }
-    Document& asDocument() noexcept { return reinterpret_cast<Document&>(*this); }
-    const Document& asDocument() const noexcept { return reinterpret_cast<const Document&>(*this); }
+    XMLElement& asElement() noexcept { return reinterpret_cast<XMLElement&>(*this); }
+    const XMLElement& asElement() const noexcept { return reinterpret_cast<const XMLElement&>(*this); }
+    XMLText& asText() noexcept { return reinterpret_cast<XMLText&>(*this); }
+    const XMLText& asText() const noexcept { return reinterpret_cast<const XMLText&>(*this); }
+    XMLCDATA& asCDATA() noexcept { return reinterpret_cast<XMLCDATA&>(*this); }
+    const XMLCDATA& asCDATA() const noexcept { return reinterpret_cast<const XMLCDATA&>(*this); }
+    XMLComment& asComment() noexcept { return reinterpret_cast<XMLComment&>(*this); }
+    const XMLComment& asComment() const noexcept { return reinterpret_cast<const XMLComment&>(*this); }
+    XMLProcessingInstruction& asProcessingInstruction() noexcept { return reinterpret_cast<XMLProcessingInstruction&>(*this); }
+    const XMLProcessingInstruction& asProcessingInstruction() const noexcept { return reinterpret_cast<const XMLProcessingInstruction&>(*this); }
+    XMLDocument& asDocument() noexcept { return reinterpret_cast<XMLDocument&>(*this); }
+    const XMLDocument& asDocument() const noexcept { return reinterpret_cast<const XMLDocument&>(*this); }
     
 };
 
-class Attribute : public Impl::List<Attribute>::ListElement {
+class XMLAttribute : public Impl::List<XMLAttribute>::ListElement {
     
 private:
     
@@ -221,11 +221,11 @@ private:
     
 public:
     
-    Attribute() : Impl::List<Attribute>::ListElement(), name(), value() {}
-    Attribute(StringView8 name_, StringView8 value_) :
-        Impl::List<Attribute>::ListElement(), name(name_), value(value_) {}
-    Attribute(const Attribute& src) = delete;
-    ~Attribute() = default;
+    XMLAttribute() : Impl::List<XMLAttribute>::ListElement(), name(), value() {}
+    XMLAttribute(StringView8 name_, StringView8 value_) :
+        Impl::List<XMLAttribute>::ListElement(), name(name_), value(value_) {}
+    XMLAttribute(const XMLAttribute& src) = delete;
+    ~XMLAttribute() = default;
     
     StringView8 getName() const { return name; }
     void setName(StringView8 name_) { name = name_; }
@@ -234,7 +234,7 @@ public:
 
 };
 
-class Element : public Node {
+class XMLElement : public XMLNode {
     
 private:
     
@@ -242,29 +242,29 @@ private:
     
 private:
     
-    Impl::List<Attribute> listAttr;
+    Impl::List<XMLAttribute> listAttr;
     StringView8 name;
     
 public:
     
-    Element() : Node(Type::Element), listAttr(), name() {}
-    Element(StringView8 name_) : Node(Type::Element), listAttr(), name(name_) {}
-    Element(const Element& src) = delete;
-    ~Element() = default;
+    XMLElement() : XMLNode(Type::XMLElement), listAttr(), name() {}
+    XMLElement(StringView8 name_) : XMLNode(Type::XMLElement), listAttr(), name(name_) {}
+    XMLElement(const XMLElement& src) = delete;
+    ~XMLElement() = default;
     
-    Impl::List<Attribute>& attribute() { return listAttr; }
+    Impl::List<XMLAttribute>& attribute() { return listAttr; }
     
     StringView8 getName() const { return name; }
     void setName(StringView8 name_) { name = name_; }
     
-    Attribute& getFirstAttribute() { return listAttr.getFirst(); }
-    Attribute& getLastAttribute() { return listAttr.getLast(); }
-    Attribute& appendAttribute(Attribute& attr) { return listAttr.append(*this, attr); }
-    Attribute& removeAttribute(Attribute& attr) { return listAttr.remove(attr); }
+    XMLAttribute& getFirstAttribute() { return listAttr.getFirst(); }
+    XMLAttribute& getLastAttribute() { return listAttr.getLast(); }
+    XMLAttribute& appendAttribute(XMLAttribute& attr) { return listAttr.append(*this, attr); }
+    XMLAttribute& removeAttribute(XMLAttribute& attr) { return listAttr.remove(attr); }
     
 };
 
-class Text : public Node {
+class XMLText : public XMLNode {
     
 private:
     
@@ -276,17 +276,17 @@ private:
     
 public:
     
-    Text() : Node(Type::Text), value() {}
-    Text(StringView8 value_) : Node(Type::Text), value(value_) {}
-    Text(const Text& src) = delete;
-    ~Text() = default;
+    XMLText() : XMLNode(Type::XMLText), value() {}
+    XMLText(StringView8 value_) : XMLNode(Type::XMLText), value(value_) {}
+    XMLText(const XMLText& src) = delete;
+    ~XMLText() = default;
     
     StringView8 getValue() const { return value; }
     void setValue(StringView8 value_) { value = value_; }
     
 };
 
-class CDATA : public Node {
+class XMLCDATA : public XMLNode {
     
 private:
     
@@ -298,17 +298,17 @@ private:
     
 public:
     
-    CDATA() : Node(Type::CDATA), value() {}
-    CDATA(StringView8 value_) : Node(Type::CDATA), value(value_) {}
-    CDATA(const CDATA& src) = delete;
-    ~CDATA() = default;
+    XMLCDATA() : XMLNode(Type::XMLCDATA), value() {}
+    XMLCDATA(StringView8 value_) : XMLNode(Type::XMLCDATA), value(value_) {}
+    XMLCDATA(const XMLCDATA& src) = delete;
+    ~XMLCDATA() = default;
     
     StringView8 getValue() const { return value; }
     void setValue(StringView8 value_) { value = value_; }
     
 };
 
-class Comment : public Node {
+class XMLComment : public XMLNode {
     
 private:
     
@@ -320,17 +320,17 @@ private:
     
 public:
     
-    Comment() : Node(Type::Comment), value() {}
-    Comment(StringView8 value_) : Node(Type::Comment), value(value_) {}
-    Comment(const Comment& src) = delete;
-    ~Comment() = default;
+    XMLComment() : XMLNode(Type::XMLComment), value() {}
+    XMLComment(StringView8 value_) : XMLNode(Type::XMLComment), value(value_) {}
+    XMLComment(const XMLComment& src) = delete;
+    ~XMLComment() = default;
     
     StringView8 getValue() const { return value; }
     void setValue(StringView8 value_) { value = value_; }
     
 };
 
-class ProcessingInstruction : public Node {
+class XMLProcessingInstruction : public XMLNode {
     
 private:
     
@@ -343,11 +343,11 @@ private:
     
 public:
     
-    ProcessingInstruction() : Node(Type::ProcessingInstruction), name(), value() {};
-    ProcessingInstruction(StringView8& name_, StringView8& value_) :
-        Node(Type::ProcessingInstruction), name(name_), value(value_) {}
-    ProcessingInstruction(const ProcessingInstruction& src) = delete;
-    ~ProcessingInstruction() = default;
+    XMLProcessingInstruction() : XMLNode(Type::XMLProcessingInstruction), name(), value() {};
+    XMLProcessingInstruction(StringView8& name_, StringView8& value_) :
+        XMLNode(Type::XMLProcessingInstruction), name(name_), value(value_) {}
+    XMLProcessingInstruction(const XMLProcessingInstruction& src) = delete;
+    ~XMLProcessingInstruction() = default;
     
     StringView8 getName() const { return name; }
     void setName(StringView8 name_) { name = name_; }
@@ -356,7 +356,7 @@ public:
     
 };
 
-class Document : public Node {
+class XMLDocument : public XMLNode {
     
 private:
     
@@ -387,38 +387,38 @@ private:
     
 public:
     
-    Document() : Node(Type::Document), memoryPool() {}
-    Document(const Document& src) = delete;
-    ~Document() = default;
+    XMLDocument() : XMLNode(Type::XMLDocument), memoryPool() {}
+    XMLDocument(const XMLDocument& src) = delete;
+    ~XMLDocument() = default;
     
-    Element& createElement(StringView8 name) {
+    XMLElement& createElement(StringView8 name) {
         
-        return *new(memoryPool.allocate(sizeof(Element))) Element(name);
-        
-    }
-    Attribute& createAttribute(StringView8 name, StringView8 value) {
-        
-        return *new(memoryPool.allocate(sizeof(Attribute))) Attribute(name, value);
+        return *new(memoryPool.allocate(sizeof(XMLElement))) XMLElement(name);
         
     }
-    Text& createText(StringView8 value) {
+    XMLAttribute& createAttribute(StringView8 name, StringView8 value) {
         
-        return *new(memoryPool.allocate(sizeof(Text))) Text(value);
-        
-    }
-    CDATA& createCDATA(StringView8 value) {
-        
-        return *new(memoryPool.allocate(sizeof(CDATA))) CDATA(value);
+        return *new(memoryPool.allocate(sizeof(XMLAttribute))) XMLAttribute(name, value);
         
     }
-    Comment& createComment(StringView8 value) {
+    XMLText& createText(StringView8 value) {
         
-        return *new(memoryPool.allocate(sizeof(Comment))) Comment(value);
+        return *new(memoryPool.allocate(sizeof(XMLText))) XMLText(value);
         
     }
-    ProcessingInstruction& createProcessingInstruction(StringView8 name, StringView8 value) {
+    XMLCDATA& createCDATA(StringView8 value) {
         
-        return *new(memoryPool.allocate(sizeof(ProcessingInstruction))) ProcessingInstruction(name, value);
+        return *new(memoryPool.allocate(sizeof(XMLCDATA))) XMLCDATA(value);
+        
+    }
+    XMLComment& createComment(StringView8 value) {
+        
+        return *new(memoryPool.allocate(sizeof(XMLComment))) XMLComment(value);
+        
+    }
+    XMLProcessingInstruction& createProcessingInstruction(StringView8 name, StringView8 value) {
+        
+        return *new(memoryPool.allocate(sizeof(XMLProcessingInstruction))) XMLProcessingInstruction(name, value);
         
     }
     
@@ -428,26 +428,26 @@ public:
         
     }
     
-    Element& getRootElement() {
+    XMLElement& getRootElement() {
         
-        for(auto& node : child()) if(node.getType() == Type::Element) return static_cast<Element&>(node);
+        for(auto& node : child()) if(node.getType() == Type::XMLElement) return static_cast<XMLElement&>(node);
         throw Exception("root element not found");
         
     }
     
-    template <Parser::Flag F = Parser::Flag::Default>
+    template <XMLParser::Flag F = XMLParser::Flag::Default>
     void parse(char* data) {
         
-        class Handler : public HandlerBase {
+        class Handler : public XMLHandlerBase {
             
         private:
             
-            Document* document;
-            Node* cur;
+            XMLDocument* document;
+            XMLNode* cur;
             
         public:
             
-            Handler(Document* document_) : document(document_), cur(nullptr) {}
+            Handler(XMLDocument* document_) : document(document_), cur(nullptr) {}
             
             void startDocument() { cur = document; }
             void startElement(StringView8 name) {
@@ -469,7 +469,7 @@ public:
             }
             void attribute(StringView8 name, StringView8 value) {
                 
-                static_cast<Element*>(cur)->appendAttribute(document->createAttribute(name, value));
+                static_cast<XMLElement*>(cur)->appendAttribute(document->createAttribute(name, value));
                 
             }
             void text(StringView8 value) {
@@ -498,7 +498,7 @@ public:
         assert(data);
         
         clear();
-        Parser parser;
+        XMLParser parser;
         Handler handler(this);
         parser.parse<F>(data, handler);
         
@@ -506,18 +506,18 @@ public:
     
     void serialize(OutputStream<char>& stream) {
         
-        Serializer serializer(stream);
+        XMLSerializer serializer(stream);
         serializer.startDocument();
         if(hasChildNodes()) {
             
-            Node* cur = &getFirstChild();
+            XMLNode* cur = &getFirstChild();
             while(true) {
                 
                 switch(cur->getType()) {
                 
-                case Type::Element: {
+                case Type::XMLElement: {
                     
-                    auto& element = static_cast<Element&>(*cur);
+                    auto& element = static_cast<XMLElement&>(*cur);
                     serializer.startElement(element.getName());
                     for(auto& attr : element.attribute()) {
                         
@@ -530,30 +530,30 @@ public:
                     break;
                     
                 }
-                case Type::Text: {
+                case Type::XMLText: {
                     
-                    auto& text = static_cast<Text&>(*cur);
+                    auto& text = static_cast<XMLText&>(*cur);
                     serializer.text(text.getValue());
                     break;
                     
                 }
-                case Type::CDATA: {
+                case Type::XMLCDATA: {
                     
-                    auto& cdata = static_cast<CDATA&>(*cur);
+                    auto& cdata = static_cast<XMLCDATA&>(*cur);
                     serializer.cdata(cdata.getValue());
                     break;
                     
                 }
-                case Type::Comment: {
+                case Type::XMLComment: {
                     
-                    auto& comment = static_cast<Comment&>(*cur);
+                    auto& comment = static_cast<XMLComment&>(*cur);
                     serializer.comment(comment.getValue());
                     break;
                     
                 }
-                case Type::ProcessingInstruction: {
+                case Type::XMLProcessingInstruction: {
                     
-                    auto& pi = static_cast<ProcessingInstruction&>(*cur);
+                    auto& pi = static_cast<XMLProcessingInstruction&>(*cur);
                     serializer.processingInstruction(pi.getName(), pi.getValue());
                     break;
                     
@@ -565,7 +565,7 @@ public:
                     
                     cur = cur->parent;
                     if(cur == this) break;
-                    auto name = static_cast<Element*>(cur)->getName();
+                    auto name = static_cast<XMLElement*>(cur)->getName();
                     serializer.endElement(name);
                     
                 }
@@ -581,7 +581,7 @@ public:
     
 };
 
-inline std::ostream& operator <<(std::ostream& stream, Document& document) {
+inline std::ostream& operator <<(std::ostream& stream, XMLDocument& document) {
     
     auto wrapper = Corecat::Stream::createWrapperOutputStream(stream);
     document.serialize(wrapper);

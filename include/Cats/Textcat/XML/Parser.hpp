@@ -114,7 +114,7 @@ struct Hexadecimal {
 }
 
 
-class Parser {
+class XMLParser {
     
     using StringView8 = Cats::Corecat::StringView8;
     
@@ -700,7 +700,7 @@ private:
     
 public:
     
-    Parser() = default;
+    XMLParser() = default;
     
     template <Flag F = Flag::Default, typename H>
     void parse(char* data, H& handler) {

@@ -43,7 +43,7 @@ namespace Cats {
 namespace Textcat{
 namespace XML {
 
-class Serializer : public HandlerBase {
+class XMLSerializer : public XMLHandlerBase {
     
 private:
     
@@ -57,8 +57,8 @@ private:
     
 public:
     
-    Serializer() = default;
-    Serializer(OutputStream<char>& stream_) : stream(&stream_) {}
+    XMLSerializer() = default;
+    XMLSerializer(OutputStream<char>& stream_) : stream(&stream_) {}
     
     void startDocument() {}
     void endDocument() {}

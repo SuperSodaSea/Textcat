@@ -30,19 +30,19 @@
 #include "Cats/Textcat/XML.hpp"
 
 using namespace Cats::Corecat;
-using namespace Cats::Textcat;
+using namespace Cats::Textcat::XML;
 
 int main() {
     
     auto wrapper = Stream::createWrapperOutputStream(std::cout);
-    XML::Serializer s(wrapper);
+    XMLSerializer s(wrapper);
     s.startDocument();
         s.startElement("list");
             s.endAttributes(false);
             s.startElement("person");
                 s.attribute("name", "SuperSodaSea");
                 s.attribute("gender", "male");
-                s.attribute("age", "16");
+                s.attribute("age", "17");
                 s.endAttributes(true);
         s.endElement("list");
     s.endDocument();

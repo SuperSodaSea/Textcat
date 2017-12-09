@@ -32,7 +32,7 @@
 
 #include "Cats/Textcat/XML.hpp"
 
-using namespace Cats::Textcat;
+using namespace Cats::Textcat::XML;
 
 void readFile(const char* name, std::vector<char>& data) {
     
@@ -59,7 +59,7 @@ int main(int argc, char** argv) {
         
         std::vector<char> data;
         readFile(argv[1], data);
-        XML::Document document;
+        XMLDocument document;
         document.parse<>(data.data());
         std::cout << document << std::endl;
         

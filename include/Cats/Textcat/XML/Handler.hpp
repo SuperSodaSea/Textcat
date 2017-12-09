@@ -35,7 +35,7 @@ namespace Cats {
 namespace Textcat{
 namespace XML {
 
-class HandlerBase {
+class XMLHandlerBase {
     
 public:
     

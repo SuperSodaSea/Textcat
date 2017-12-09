@@ -33,9 +33,9 @@
 #include "Cats/Textcat/XML.hpp"
 
 using namespace Cats::Corecat;
-using namespace Cats::Textcat;
+using namespace Cats::Textcat::XML;
 
-class Handler : public XML::HandlerBase {
+class Handler : public XMLHandlerBase {
     
 private:
     
@@ -118,7 +118,7 @@ int main(int argc, char** argv) {
         
         std::vector<char> data;
         readFile(argv[1], data);
-        XML::Parser parser;
+        XMLParser parser;
         Handler handler;
         parser.parse<>(data.data(), handler);
         

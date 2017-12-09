@@ -28,16 +28,16 @@
 
 #include "Cats/Textcat/XML.hpp"
 
-using namespace Cats::Textcat;
+using namespace Cats::Textcat::XML;
 
 int main() {
     
-    XML::Document document;
-    XML::Element list("list"); document.appendChild(list);
-        XML::Element person("person"); list.appendChild(person);
-            XML::Attribute name("name", "SuperSodaSea"); person.appendAttribute(name);
-            XML::Attribute gender("gender", "male"); person.appendAttribute(gender);
-            XML::Attribute age("age", "16"); person.appendAttribute(age);
+    XMLDocument document;
+    XMLElement list("list"); document.appendChild(list);
+        XMLElement person("person"); list.appendChild(person);
+            XMLAttribute name("name", "SuperSodaSea"); person.appendAttribute(name);
+            XMLAttribute gender("gender", "male"); person.appendAttribute(gender);
+            XMLAttribute age("age", "17"); person.appendAttribute(age);
     std::cout << document << std::endl;
     
     return 0;
