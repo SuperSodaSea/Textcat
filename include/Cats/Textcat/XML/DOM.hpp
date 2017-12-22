@@ -36,7 +36,7 @@
 
 #include "Cats/Corecat/MemoryPool.hpp"
 #include "Cats/Corecat/Stream.hpp"
-#include "Cats/Corecat/String.hpp"
+#include "Cats/Corecat/Text/String.hpp"
 
 #include "Handler.hpp"
 #include "Parser.hpp"
@@ -212,7 +212,7 @@ class XMLAttribute : public Impl::List<XMLAttribute>::ListElement {
     
 private:
     
-    using StringView8 = Cats::Corecat::StringView8;
+    using StringView8 = Corecat::Text::StringView8;
     
 private:
     
@@ -238,7 +238,7 @@ class XMLElement : public XMLNode {
     
 private:
     
-    using StringView8 = Cats::Corecat::StringView8;
+    using StringView8 = Corecat::Text::StringView8;
     
 private:
     
@@ -268,7 +268,7 @@ class XMLText : public XMLNode {
     
 private:
     
-    using StringView8 = Cats::Corecat::StringView8;
+    using StringView8 = Corecat::Text::StringView8;
     
 private:
     
@@ -290,7 +290,7 @@ class XMLCDATA : public XMLNode {
     
 private:
     
-    using StringView8 = Cats::Corecat::StringView8;
+    using StringView8 = Corecat::Text::StringView8;
     
 private:
     
@@ -312,7 +312,7 @@ class XMLComment : public XMLNode {
     
 private:
     
-    using StringView8 = Cats::Corecat::StringView8;
+    using StringView8 = Corecat::Text::StringView8;
     
 private:
     
@@ -334,7 +334,7 @@ class XMLProcessingInstruction : public XMLNode {
     
 private:
     
-    using StringView8 = Cats::Corecat::StringView8;
+    using StringView8 = Corecat::Text::StringView8;
     
 private:
     
@@ -360,9 +360,9 @@ class XMLDocument : public XMLNode {
     
 private:
     
-    using StringView8 = Cats::Corecat::StringView8;
+    using StringView8 = Corecat::Text::StringView8;
     template <typename T>
-    using OutputStream = Cats::Corecat::Stream::OutputStream<T>;
+    using OutputStream = Corecat::Stream::OutputStream<T>;
     
 public:
     

@@ -29,12 +29,12 @@
 #include "Cats/Corecat/Stream.hpp"
 #include "Cats/Textcat/XML.hpp"
 
-using namespace Cats::Corecat;
+using namespace Cats::Corecat::Stream;
 using namespace Cats::Textcat::XML;
 
 int main() {
     
-    auto wrapper = Stream::createWrapperOutputStream(std::cout);
+    auto wrapper = createWrapperOutputStream(std::cout);
     XMLSerializer s(wrapper);
     s.startDocument();
         s.startElement("list");

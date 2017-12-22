@@ -116,7 +116,9 @@ struct Hexadecimal {
 
 class XMLParser {
     
-    using StringView8 = Cats::Corecat::StringView8;
+private:
+    
+    using StringView8 = Corecat::Text::StringView8;
     
 public:
     
@@ -168,7 +170,7 @@ private:
     template <Flag F>
     void parseReference(char*& q) {
         
-        using namespace Cats::Corecat::Sequence;
+        using namespace Corecat::Sequence;
         
         switch(p[1]) {
         
@@ -281,7 +283,7 @@ private:
     template <Flag F, typename H>
     void parseXMLDeclaration(H& /*handler*/) {
         
-        using namespace Cats::Corecat::Sequence;
+        using namespace Corecat::Sequence;
         
         Impl::Skipper<Impl::Space>::skip(p);
         
@@ -423,7 +425,7 @@ private:
     template <Flag F, typename H>
     void parseElement(H& handler) {
         
-        using namespace Cats::Corecat::Sequence;
+        using namespace Corecat::Sequence;
         
         // Parse element type
         StringView8 name(p, 0);
@@ -705,7 +707,7 @@ public:
     template <Flag F = Flag::Default, typename H>
     void parse(char* data, H& handler) {
         
-        using namespace Cats::Corecat::Sequence;
+        using namespace Corecat::Sequence;
         
         assert(data);
         

@@ -29,10 +29,10 @@
 #include <stdexcept>
 #include <vector>
 
-#include "Cats/Corecat/String.hpp"
+#include "Cats/Corecat/Text.hpp"
 #include "Cats/Textcat/XML.hpp"
 
-using namespace Cats::Corecat;
+using namespace Cats::Corecat::Text;
 using namespace Cats::Textcat::XML;
 
 class Handler : public XMLHandlerBase {

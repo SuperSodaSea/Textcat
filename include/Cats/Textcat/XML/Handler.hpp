@@ -28,7 +28,7 @@
 #define CATS_TEXTCAT_XML_HANDLER_HPP
 
 
-#include "Cats/Corecat/String.hpp"
+#include "Cats/Corecat/Text/String.hpp"
 
 
 namespace Cats {
@@ -37,19 +37,23 @@ namespace XML {
 
 class XMLHandlerBase {
     
+protected:
+    
+    using StringView8 = Corecat::Text::StringView8;
+    
 public:
     
     void startDocument() {}
     void endDocument() {}
-    void startElement(Corecat::StringView8 /*name*/) {}
-    void endElement(Corecat::StringView8 /*name*/) {}
+    void startElement(StringView8 /*name*/) {}
+    void endElement(StringView8 /*name*/) {}
     void endAttributes(bool /*empty*/) {}
     void doctype() {}
-    void attribute(Corecat::StringView8 /*name*/, Corecat::StringView8 /*value*/) {}
-    void text(Corecat::StringView8 /*value*/) {}
-    void cdata(Corecat::StringView8 /*value*/) {}
-    void comment(Corecat::StringView8 /*value*/) {}
-    void processingInstruction(Corecat::StringView8 /*name*/, Corecat::StringView8 /*value*/) {}
+    void attribute(StringView8 /*name*/, StringView8 /*value*/) {}
+    void text(StringView8 /*value*/) {}
+    void cdata(StringView8 /*value*/) {}
+    void comment(StringView8 /*value*/) {}
+    void processingInstruction(StringView8 /*name*/, StringView8 /*value*/) {}
     
 };
 
