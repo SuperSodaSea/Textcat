@@ -37,6 +37,7 @@
 #include "Cats/Corecat/MemoryPool.hpp"
 #include "Cats/Corecat/Stream.hpp"
 #include "Cats/Corecat/Text/String.hpp"
+#include "Cats/Corecat/Util/Exception.hpp"
 
 #include "Handler.hpp"
 #include "Parser.hpp"
@@ -156,6 +157,19 @@ public:
 };
 
 }
+
+
+class XMLDOMException : public Corecat::Util::Exception {
+    
+private:
+    
+    using String8 = Corecat::Text::String8;
+    
+public:
+    
+    XMLDOMException(const String8& data) : Exception("XMLDOMException: " + data) {}
+    
+};
 
 enum class XMLNodeType : uint16_t {
     
@@ -364,23 +378,6 @@ private:
     template <typename T>
     using OutputStream = Corecat::Stream::OutputStream<T>;
     
-public:
-    
-    class Exception : public std::exception {
-        
-    private:
-        
-        const char* str;
-        
-    public:
-        
-        Exception(const char* str_) : str(str_) {}
-        Exception(const Exception& src) : str(src.str) {}
-        
-        const char* what() const noexcept final { return str; }
-        
-    };
-    
 private:
     
     Corecat::MemoryPoolFast<> memoryPool;
@@ -431,7 +428,7 @@ public:
     XMLElement& getRootElement() {
         
         for(auto& node : child()) if(node.getType() == XMLNodeType::Element) return static_cast<XMLElement&>(node);
-        throw Exception("root element not found");
+        throw XMLDOMException("root element not found");
         
     }
     
@@ -558,7 +555,7 @@ public:
                     break;
                     
                 }
-                default: throw std::runtime_error("invalid type");
+                default: throw XMLDOMException("invalid node type");
                 
                 }
                 while(!cur->next) {
