@@ -57,7 +57,6 @@ private:
     
 public:
     
-    XMLSerializer() = default;
     XMLSerializer(OutputStream<char>& stream_) : stream(&stream_) {}
     
     void startDocument() {}

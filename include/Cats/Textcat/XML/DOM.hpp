@@ -193,7 +193,6 @@ public:
     
     XMLNode(XMLNodeType type_) : Impl::List<XMLNode>::ListElement(), type(type_), listChild() {}
     XMLNode(const XMLNode& src) = delete;
-    ~XMLNode() = default;
     
     XMLNodeType getType() const { return type; }
     
@@ -239,7 +238,6 @@ public:
     XMLAttribute(StringView8 name_, StringView8 value_) :
         Impl::List<XMLAttribute>::ListElement(), name(name_), value(value_) {}
     XMLAttribute(const XMLAttribute& src) = delete;
-    ~XMLAttribute() = default;
     
     StringView8 getName() const { return name; }
     void setName(StringView8 name_) { name = name_; }
@@ -264,7 +262,6 @@ public:
     XMLElement() : XMLNode(XMLNodeType::Element), listAttr(), name() {}
     XMLElement(StringView8 name_) : XMLNode(XMLNodeType::Element), listAttr(), name(name_) {}
     XMLElement(const XMLElement& src) = delete;
-    ~XMLElement() = default;
     
     Impl::List<XMLAttribute>& attribute() { return listAttr; }
     
@@ -293,7 +290,6 @@ public:
     XMLText() : XMLNode(XMLNodeType::Text), value() {}
     XMLText(StringView8 value_) : XMLNode(XMLNodeType::Text), value(value_) {}
     XMLText(const XMLText& src) = delete;
-    ~XMLText() = default;
     
     StringView8 getValue() const { return value; }
     void setValue(StringView8 value_) { value = value_; }
@@ -315,7 +311,6 @@ public:
     XMLCDATA() : XMLNode(XMLNodeType::CDATA), value() {}
     XMLCDATA(StringView8 value_) : XMLNode(XMLNodeType::CDATA), value(value_) {}
     XMLCDATA(const XMLCDATA& src) = delete;
-    ~XMLCDATA() = default;
     
     StringView8 getValue() const { return value; }
     void setValue(StringView8 value_) { value = value_; }
@@ -337,7 +332,6 @@ public:
     XMLComment() : XMLNode(XMLNodeType::Comment), value() {}
     XMLComment(StringView8 value_) : XMLNode(XMLNodeType::Comment), value(value_) {}
     XMLComment(const XMLComment& src) = delete;
-    ~XMLComment() = default;
     
     StringView8 getValue() const { return value; }
     void setValue(StringView8 value_) { value = value_; }
@@ -361,7 +355,6 @@ public:
     XMLProcessingInstruction(StringView8& name_, StringView8& value_) :
         XMLNode(XMLNodeType::ProcessingInstruction), name(name_), value(value_) {}
     XMLProcessingInstruction(const XMLProcessingInstruction& src) = delete;
-    ~XMLProcessingInstruction() = default;
     
     StringView8 getName() const { return name; }
     void setName(StringView8 name_) { name = name_; }
@@ -386,7 +379,6 @@ public:
     
     XMLDocument() : XMLNode(XMLNodeType::Document), memoryPool() {}
     XMLDocument(const XMLDocument& src) = delete;
-    ~XMLDocument() = default;
     
     XMLElement& createElement(StringView8 name) {
         
