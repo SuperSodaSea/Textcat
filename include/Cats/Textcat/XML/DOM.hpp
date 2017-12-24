@@ -34,9 +34,9 @@
 #include <new>
 #include <iostream>
 
-#include "Cats/Corecat/MemoryPool.hpp"
 #include "Cats/Corecat/Stream.hpp"
 #include "Cats/Corecat/Text/String.hpp"
+#include "Cats/Corecat/Util/Allocator.hpp"
 #include "Cats/Corecat/Util/Exception.hpp"
 
 #include "Handler.hpp"
@@ -370,50 +370,51 @@ private:
     using StringView8 = Corecat::Text::StringView8;
     template <typename T>
     using OutputStream = Corecat::Stream::OutputStream<T>;
+    using FastAllocator = Corecat::Util::FastAllocator<>;
     
 private:
     
-    Corecat::MemoryPoolFast<> memoryPool;
+    FastAllocator allocator;
     
 public:
     
-    XMLDocument() : XMLNode(XMLNodeType::Document), memoryPool() {}
+    XMLDocument() : XMLNode(XMLNodeType::Document), allocator() {}
     XMLDocument(const XMLDocument& src) = delete;
     
     XMLElement& createElement(StringView8 name) {
         
-        return *new(memoryPool.allocate(sizeof(XMLElement))) XMLElement(name);
+        return *new(allocator.allocate(sizeof(XMLElement))) XMLElement(name);
         
     }
     XMLAttribute& createAttribute(StringView8 name, StringView8 value) {
         
-        return *new(memoryPool.allocate(sizeof(XMLAttribute))) XMLAttribute(name, value);
+        return *new(allocator.allocate(sizeof(XMLAttribute))) XMLAttribute(name, value);
         
     }
     XMLText& createText(StringView8 value) {
         
-        return *new(memoryPool.allocate(sizeof(XMLText))) XMLText(value);
+        return *new(allocator.allocate(sizeof(XMLText))) XMLText(value);
         
     }
     XMLCDATA& createCDATA(StringView8 value) {
         
-        return *new(memoryPool.allocate(sizeof(XMLCDATA))) XMLCDATA(value);
+        return *new(allocator.allocate(sizeof(XMLCDATA))) XMLCDATA(value);
         
     }
     XMLComment& createComment(StringView8 value) {
         
-        return *new(memoryPool.allocate(sizeof(XMLComment))) XMLComment(value);
+        return *new(allocator.allocate(sizeof(XMLComment))) XMLComment(value);
         
     }
     XMLProcessingInstruction& createProcessingInstruction(StringView8 name, StringView8 value) {
         
-        return *new(memoryPool.allocate(sizeof(XMLProcessingInstruction))) XMLProcessingInstruction(name, value);
+        return *new(allocator.allocate(sizeof(XMLProcessingInstruction))) XMLProcessingInstruction(name, value);
         
     }
     
     void clear() {
         
-        memoryPool.clear();
+        allocator.clear();
         
     }
     
