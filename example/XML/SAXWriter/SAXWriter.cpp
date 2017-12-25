@@ -26,10 +26,10 @@
 
 #include <iostream>
 
-#include "Cats/Corecat/Stream.hpp"
+#include "Cats/Corecat/Data/Stream.hpp"
 #include "Cats/Textcat/XML.hpp"
 
-using namespace Cats::Corecat::Stream;
+using namespace Cats::Corecat::Data::Stream;
 using namespace Cats::Textcat::XML;
 
 int main() {

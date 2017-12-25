@@ -33,7 +33,7 @@
 
 #include <iostream>
 
-#include "Cats/Corecat/Stream/OutputStream.hpp"
+#include "Cats/Corecat/Data/Stream/OutputStream.hpp"
 #include "Cats/Corecat/Text/String.hpp"
 
 #include "Handler.hpp"
@@ -47,9 +47,9 @@ class XMLSerializer : public XMLHandlerBase {
     
 private:
     
-    using StringView8 = Corecat::Text::StringView8;
     template <typename T>
-    using OutputStream = Corecat::Stream::OutputStream<T>;
+    using OutputStream = Corecat::Data::Stream::OutputStream<T>;
+    using StringView8 = Corecat::Text::StringView8;
     
 private:
     

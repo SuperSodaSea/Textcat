@@ -34,7 +34,7 @@
 #include <new>
 #include <iostream>
 
-#include "Cats/Corecat/Stream.hpp"
+#include "Cats/Corecat/Data/Stream.hpp"
 #include "Cats/Corecat/Text/String.hpp"
 #include "Cats/Corecat/Util/Allocator.hpp"
 #include "Cats/Corecat/Util/Exception.hpp"
@@ -367,9 +367,9 @@ class XMLDocument : public XMLNode {
     
 private:
     
-    using StringView8 = Corecat::Text::StringView8;
     template <typename T>
-    using OutputStream = Corecat::Stream::OutputStream<T>;
+    using OutputStream = Corecat::Data::Stream::OutputStream<T>;
+    using StringView8 = Corecat::Text::StringView8;
     using FastAllocator = Corecat::Util::FastAllocator<>;
     
 private:
@@ -573,7 +573,7 @@ public:
 
 inline std::ostream& operator <<(std::ostream& stream, XMLDocument& document) {
     
-    auto wrapper = Corecat::Stream::createWrapperOutputStream(stream);
+    auto wrapper = Corecat::Data::Stream::createWrapperOutputStream(stream);
     document.serialize(wrapper);
     return stream;
     
