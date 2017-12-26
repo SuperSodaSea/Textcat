@@ -1,0 +1,37 @@
+os: Visual Studio 2017
+version: 0.0.0.{build}
+
+configuration:
+- Debug
+- Release
+
+environment:
+  matrix:
+  - VS_VERSION: 14 2015
+    VS_PLATFORM: win32
+  - VS_VERSION: 14 2015
+    VS_PLATFORM: x64
+  - VS_VERSION: 15 2017
+    VS_PLATFORM: win32
+  - VS_VERSION: 15 2017
+    VS_PLATFORM: x64
+
+before_build:
+- cd ..
+- git clone -q --branch=master https://github.com/SuperSodaSea/Corecat.git
+- cd Corecat
+- git checkout -fq master
+- xcopy include ..\Textcat\include /E /I /Q
+- cd ..\Textcat
+- cmake -H. -Bbuild -G "Visual Studio %VS_VERSION%" -DCMAKE_GENERATOR_PLATFORM=%VS_PLATFORM%
+
+build:
+  project: build/Textcat.sln
+  parallel: true
+  verbosity: minimal
+
+test_script:
+- build\%CONFIGURATION%\XML_DOMReader.exe data\test1.xml
+- build\%CONFIGURATION%\XML_DOMWriter.exe
+- build\%CONFIGURATION%\XML_SAXReader.exe data\test1.xml
+- build\%CONFIGURATION%\XML_SAXWriter.exe

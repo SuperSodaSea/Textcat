@@ -1,6 +1,10 @@
 # Textcat: Text data formats library
 
-Textcat is a part of *The Cats Project*. It is designed to be a collection of parsers and serializers for various text data formats.
+Textcat is a module of *The Cats Project*. It is designed to be a collection of parsers and serializers for various text data formats.
+
+CI | Status
+:---: | :---:
+AppVeyor | [![AppYeyor](https://ci.appveyor.com/api/projects/status/github/SuperSodaSea/Textcat?branch=master&svg=true)](https://ci.appveyor.com/project/SuperSodaSea/Textcat)
 
 Currently supported format:
 
