@@ -1,0 +1,43 @@
+language: cpp
+
+sudo: required
+
+matrix:
+  include:
+    - env: CONFIG=debug FLAGS="-m32"
+      compiler: gcc
+    - env: CONFIG=release FLAGS="-m32"
+      compiler: gcc
+    - env: CONFIG=debug FLAGS="-m64"
+      compiler: gcc
+    - env: CONFIG=release FLAGS="-m64"
+      compiler: gcc
+    - env: CONFIG=debug FLAGS="-m32"
+      compiler: clang
+    - env: CONFIG=release FLAGS="-m32"
+      compiler: clang
+    - env: CONFIG=debug FLAGS="-m64"
+      compiler: clang
+    - env: CONFIG=release FLAGS="-m64"
+      compiler: clang
+
+before_script:
+- sudo apt-add-repository -y ppa:ubuntu-toolchain-r/test
+- sudo apt-get update -qq
+- sudo apt-get install -y g++-multilib lib32stdc++6 libc6-dev-i386
+- cd ..
+- git clone -q --branch=master https://github.com/SuperSodaSea/Corecat.git
+- cd Corecat
+- git checkout -fq master
+- cp -r include ../Textcat/include
+- cd ../Textcat
+- cmake -H. -Bbuild -DCMAKE_BUILD_TYPE=$CONFIG -DCMAKE_CXX_FLAGS=$FLAGS
+
+script:
+- make -C build
+
+after_success:
+- ./build/XML_DOMReader data/test1.xml
+- ./build/XML_DOMWriter
+- ./build/XML_SAXReader data/test1.xml
+- ./build/XML_SAXWriter

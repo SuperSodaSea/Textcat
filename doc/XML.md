@@ -30,22 +30,17 @@ Specification for DOM:
 
 #include "Cats/Textcat/XML.hpp"
 
-using namespace Cats::Textcat;
+using namespace Cats::Textcat::XML;
 
 int main() {
     
-    std::ios::sync_with_stdio(false);
-    
-	char data[] = R"(<list><person name="SuperSodaSea" gender="male" age="16"/></list>)";
+    char data[] = R"(<list><person name="SuperSodaSea" gender="male" age="17"/></list>)";
 	
-    XML::Document document;
-	document.parse<XML::Parser::Flag::Default>(data);
+    XMLDocument document;
+    document.parse<>(data);
     std::cout << document << std::endl;
     
     return 0;
     
 }
 ```
-
-
-[Corecat]: https://github.com/SuperSodaSea/Corecat
