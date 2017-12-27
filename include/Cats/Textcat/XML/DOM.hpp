@@ -421,7 +421,7 @@ public:
     XMLElement& getRootElement() {
         
         for(auto& node : child()) if(node.getType() == XMLNodeType::Element) return static_cast<XMLElement&>(node);
-        throw XMLDOMException("root element not found");
+        throw XMLDOMException("Root element not found");
         
     }
     
@@ -548,7 +548,7 @@ public:
                     break;
                     
                 }
-                default: throw XMLDOMException("invalid node type");
+                default: throw XMLDOMException("Invalid node type");
                 
                 }
                 while(!cur->next) {

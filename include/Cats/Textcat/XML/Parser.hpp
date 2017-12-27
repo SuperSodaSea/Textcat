@@ -174,16 +174,16 @@ private:
         
         switch(p[1]) {
         
-        case 0: throw XMLParseException("unexpected end", p - s);
+        case 0: throw XMLParseException("Unexpected end of data", p - s);
         case '#': {
             
             if(p[2] == 'x') {
                 
                 p += 3;
-                if(*p == ';') throw XMLParseException("unexpected ;", p - s);
+                if(*p == ';') throw XMLParseException("Unexpected ;", p - s);
                 std::uint32_t code = 0;
                 for(unsigned char t; (t = SequenceTable<MapperSequence<Impl::Hexadecimal, IndexSequence<unsigned char, 0, 255>>>::get(*p)) != 255; code = code * 16 + t, ++p);
-                if(*p != ';') throw XMLParseException("expected ;", p - s);
+                if(*p != ';') throw XMLParseException("Expected ;", p - s);
                 ++p;
                 // TODO: Code conversion
                 *q = code;
@@ -192,10 +192,10 @@ private:
             } else {
                 
                 p += 2;
-                if(*p == ';') throw XMLParseException("unexpected ;", p - s);
+                if(*p == ';') throw XMLParseException("Unexpected ;", p - s);
                 std::uint32_t code = 0;
                 for(unsigned char t; (t = SequenceTable<MapperSequence<Impl::Decimal, IndexSequence<unsigned char, 0, 255>>>::get(*p)) != 255; code = code * 10 + t, ++p);
-                if(*p != ';') throw XMLParseException("expected ;", p - s);
+                if(*p != ';') throw XMLParseException("Expected ;", p - s);
                 ++p;
                 // TODO: Code conversion
                 *q = code;
@@ -277,7 +277,7 @@ private:
         }
         
         }
-        throw XMLParseException("unexpected reference", p - s);
+        throw XMLParseException("Invalid reference", p - s);
         
     }
     template <Flag F, typename H>
@@ -289,29 +289,29 @@ private:
         
         // Parse "version"
         if(p[0] != 'v' || p[1] != 'e' || p[2] != 'r' || p[3] != 's' || p[4] != 'i' || p[5] != 'o' || p[6] != 'n')
-            throw XMLParseException("expected version", p - s);
+            throw XMLParseException("Expected version", p - s);
         p += 7;
         Impl::Skipper<Impl::Space>::skip(p);
-        if(*p != '=') throw XMLParseException("expected =", p - s);
+        if(*p != '=') throw XMLParseException("Expected =", p - s);
         ++p;
         Impl::Skipper<Impl::Space>::skip(p);
         if(*p == '"') {
             
             ++p;
             Impl::Skipper<Impl::AttributeValue1>::skip(p);
-            if(*p != '"') throw XMLParseException("expected \"", p - s);
+            if(*p != '"') throw XMLParseException("Expected \"", p - s);
 
         } else if(*p == '\'') {
             
             ++p;
             Impl::Skipper<Impl::AttributeValue2>::skip(p);
-            if(*p != '\'') throw XMLParseException("expected '", p - s);
+            if(*p != '\'') throw XMLParseException("Expected '", p - s);
             
-        } else throw XMLParseException("expected \" or '", p - s);
+        } else throw XMLParseException("Expected \" or '", p - s);
         ++p;
         
         if(*p != '?' && !SequenceTable<MapperSequence<Impl::Space, IndexSequence<unsigned char, 0, 255>>>::get(*p))
-            throw XMLParseException("unexpected character", p - s);
+            throw XMLParseException("Unexpected character", p - s);
         Impl::Skipper<Impl::Space>::skip(p);
         
         // Parse "encoding"
@@ -319,28 +319,28 @@ private:
             
             p += 8;
             Impl::Skipper<Impl::Space>::skip(p);
-            if(*p != '=') throw XMLParseException("expected =", p - s);
+            if(*p != '=') throw XMLParseException("Expected =", p - s);
             ++p;
             Impl::Skipper<Impl::Space>::skip(p);
             if(*p == '"') {
                 
                 ++p;
                 Impl::Skipper<Impl::AttributeValue1>::skip(p);
-                if(*p != '"') throw XMLParseException("expected \"", p - s);
+                if(*p != '"') throw XMLParseException("Expected \"", p - s);
     
             } else if(*p == '\'') {
                 
                 ++p;
                 Impl::Skipper<Impl::AttributeValue2>::skip(p);
-                if(*p != '\'') throw XMLParseException("expected '", p - s);
+                if(*p != '\'') throw XMLParseException("Expected '", p - s);
                 
-            } else throw XMLParseException("expected \" or '", p - s);
+            } else throw XMLParseException("Expected \" or '", p - s);
             ++p;
             
         }
         
         if(*p != '?' && !SequenceTable<MapperSequence<Impl::Space, IndexSequence<unsigned char, 0, 255>>>::get(*p))
-            throw XMLParseException("unexpected character", p - s);
+            throw XMLParseException("Unexpected character", p - s);
         Impl::Skipper<Impl::Space>::skip(p);
         
         // Parse "standalone"
@@ -348,35 +348,35 @@ private:
             
             p += 10;
             Impl::Skipper<Impl::Space>::skip(p);
-            if(*p != '=') throw XMLParseException("expected =", p - s);
+            if(*p != '=') throw XMLParseException("Expected =", p - s);
             ++p;
             Impl::Skipper<Impl::Space>::skip(p);
             if(*p == '"') {
                 
                 ++p;
                 Impl::Skipper<Impl::AttributeValue1>::skip(p);
-                if(*p != '"') throw XMLParseException("expected \"", p - s);
+                if(*p != '"') throw XMLParseException("Expected \"", p - s);
     
             } else if(*p == '\'') {
                 
                 ++p;
                 Impl::Skipper<Impl::AttributeValue2>::skip(p);
-                if(*p != '\'') throw XMLParseException("expected '", p - s);
+                if(*p != '\'') throw XMLParseException("Expected '", p - s);
                 
-            } else throw XMLParseException("expected \" or '", p - s);
+            } else throw XMLParseException("Expected \" or '", p - s);
             ++p;
             
         }
         
         Impl::Skipper<Impl::Space>::skip(p);
-        if(p[0] != '?' || p[1] != '>') throw XMLParseException("expected ?>", p - s);
+        if(p[0] != '?' || p[1] != '>') throw XMLParseException("Expected ?>", p - s);
         p += 2;
         
     }
     template <Flag F, typename H>
     void parseDoctype(H& /*handler*/) {
         
-        throw XMLParseException("not implemented", p - s);
+        throw XMLParseException("Not implemented", p - s);
         
     }
     template <Flag F, typename H>
@@ -385,7 +385,7 @@ private:
         StringView8 comment(p, 0);
         // Until "-->"
         while(*p && (p[0] != '-' || p[1] != '-' || p[2] != '>')) ++p;
-        if(!*p) throw XMLParseException("unexpected end", p - s);
+        if(!*p) throw XMLParseException("Unexpected end of data", p - s);
         comment.setLength(p - comment.getData());
         p += 3;
         handler.comment(comment);
@@ -396,14 +396,14 @@ private:
         
         StringView8 target(p, 0);
         target.setLength(Impl::Skipper<Impl::Name>::skip(p));
-        if(!target.getLength()) throw XMLParseException("expected PI target", p - s);
+        if(!target.getLength()) throw XMLParseException("Expected PI target", p - s);
         if((p[0] != '?' || p[1] != '>') && !Impl::Skipper<Impl::Space>::skip(p))
-            throw XMLParseException("expected space", p - s);
+            throw XMLParseException("Expected white space", p - s);
         
         StringView8 content(p, 0);
         // Until "?>"
         while(*p && (p[0] != '?' || p[1] != '>')) ++p;
-        if(!*p) throw XMLParseException("unexpected end", p - s);
+        if(!*p) throw XMLParseException("Unexpected end of data", p - s);
         content.setLength(p - content.getData());
         p += 2;
         
@@ -416,7 +416,7 @@ private:
         StringView8 text(p, 0);
         // Until "]]>"
         while(*p && (p[0] != ']' || p[1] != ']' || p[2] != '>')) ++p;
-        if(!*p) throw XMLParseException("unexpected end", p - s);
+        if(!*p) throw XMLParseException("Unexpected end of data", p - s);
         text.setLength(p - text.getData());
         p += 3;
         handler.cdata(text);
@@ -430,7 +430,7 @@ private:
         // Parse element type
         StringView8 name(p, 0);
         name.setLength(Impl::Skipper<Impl::Name>::skip(p));
-        if(!name.getLength()) throw XMLParseException("expected element type", p - s);
+        if(!name.getLength()) throw XMLParseException("Expected element type", p - s);
         bool empty = false;
         if(*p == '>') {
             
@@ -439,7 +439,7 @@ private:
             
         } else if(*p == '/') {
             
-            if(p[1] != '>') throw XMLParseException("expected >", p + 1 - s);
+            if(p[1] != '>') throw XMLParseException("eExpected >", p + 1 - s);
             p += 2;
             handler.startElement(name);
             empty = true;
@@ -454,9 +454,9 @@ private:
                 // Parse attribute name
                 StringView8 name(p, 0);
                 name.setLength(Impl::Skipper<Impl::AttributeName>::skip(p));
-                if(!name.getLength()) throw XMLParseException("expected attribute name", p - s);
+                if(!name.getLength()) throw XMLParseException("Expected attribute name", p - s);
                 Impl::Skipper<Impl::Space>::skip(p);
-                if(*p != '=') throw XMLParseException("expected =", p - s);
+                if(*p != '=') throw XMLParseException("Expected =", p - s);
                 ++p;
                 Impl::Skipper<Impl::Space>::skip(p);
                 
@@ -472,7 +472,7 @@ private:
                         while(true) {
                             
                             auto len = Impl::Skipper<Impl::AttributeValueNoRef1>::skip(p);
-                            if(*p == 0) throw XMLParseException("unexpected end", p - s);
+                            if(*p == 0) throw XMLParseException("Unexpected end of data", p - s);
                             if(p != q + len) std::copy(q, q + len, p - len);
                             q += len;
                             if(*p == '&') parseReference<F>(q);
@@ -484,7 +484,7 @@ private:
                     } else {
                         
                         value.setLength(Impl::Skipper<Impl::AttributeValue1>::skip(p));
-                        if(*p == 0) throw XMLParseException("unexpected end", p - s);
+                        if(*p == 0) throw XMLParseException("Unexpected end of data", p - s);
                         
                     }
                     ++p;
@@ -499,7 +499,7 @@ private:
                         while(true) {
                             
                             auto len = Impl::Skipper<Impl::AttributeValueNoRef2>::skip(p);
-                            if(*p == 0) throw XMLParseException("unexpected end", p - s);
+                            if(*p == 0) throw XMLParseException("Unexpected end of data", p - s);
                             if(p != q + len) std::copy(q, q + len, p - len);
                             q += len;
                             if(*p == '&') parseReference<F>(q);
@@ -511,12 +511,12 @@ private:
                     } else {
                         
                         value.setLength(Impl::Skipper<Impl::AttributeValue2>::skip(p));
-                        if(*p == 0) throw XMLParseException("unexpected end", p - s);
+                        if(*p == 0) throw XMLParseException("Unexpected end of data", p - s);
                         
                     }
                     ++p;
                     
-                } else throw XMLParseException("expected \" or '", p - s);
+                } else throw XMLParseException("Expected \" or '", p - s);
                 handler.attribute(name, value);
                 Impl::Skipper<Impl::Space>::skip(p);
                 
@@ -527,11 +527,11 @@ private:
                 
             } else if(*p == '/') {
                 
-                if(p[1] != '>') throw XMLParseException("expected >", p + 1 - s);
+                if(p[1] != '>') throw XMLParseException("Expected >", p + 1 - s);
                 p += 2;
                 empty = true;
                 
-            } else throw XMLParseException("unexpected character", p + 1 - s);
+            } else throw XMLParseException("Unexpected character", p + 1 - s);
             
         }
         handler.endAttributes(empty);
@@ -553,7 +553,7 @@ private:
                             while(true) {
                                 
                                 auto len = Impl::Skipper<Impl::TextNoSpaceRef>::skip(p);
-                                if(*p == 0) throw XMLParseException("unexpected end", p - s);
+                                if(*p == 0) throw XMLParseException("Unexpected end of data", p - s);
                                 if(p != q + len) std::copy(p - len, p, q);
                                 q += len;
                                 if(*p == '&') parseReference<F>(q);
@@ -572,7 +572,7 @@ private:
                             while(true) {
                                 
                                 auto len = Impl::Skipper<Impl::TextNoRef>::skip(p);
-                                if(*p == 0) throw XMLParseException("unexpected end", p - s);
+                                if(*p == 0) throw XMLParseException("Unexpected end of data", p - s);
                                 if(p != q + len) std::copy(p - len, p, q);
                                 q += len;
                                 if(*p == '&') parseReference<F>(q);
@@ -597,7 +597,7 @@ private:
                             while(true) {
                                 
                                 auto len = Impl::Skipper<Impl::TextNoSpace>::skip(p);
-                                if(*p == 0) throw XMLParseException("unexpected end", p - s);
+                                if(*p == 0) throw XMLParseException("Unexpected end of data", p - s);
                                 if(p != q + len) std::copy(p - len, p, q);
                                 q += len;
                                 if(*p != '<') { Impl::Skipper<Impl::Space>::skip(p); *(q++) = ' '; }
@@ -615,7 +615,7 @@ private:
                             
                             StringView8 text(p, 0);
                             Impl::Skipper<Impl::Text>::skip(p);
-                            if(*p == 0) throw XMLParseException("unexpected end", p - s);
+                            if(*p == 0) throw XMLParseException("Unexpected end of data", p - s);
                             auto q = p - 1;
                             if(F & Flag::TrimSpace)
                                 for(; SequenceTable<MapperSequence<Impl::Space, IndexSequence<unsigned char, 0, 255>>>::get(*q); --q);
@@ -646,7 +646,7 @@ private:
                         p += 7;
                         parseCDATA<F>(handler);
                         
-                    } else throw XMLParseException("unexpected character", p - s);
+                    } else throw XMLParseException("Unexpected character", p - s);
                     break;
                     
                 }
@@ -659,17 +659,17 @@ private:
                         Impl::Skipper<Impl::Name>::skip(p);
                         endName.setLength(p - endName.getData());
                         Impl::Skipper<Impl::Space>::skip(p);
-                        if(*p != '>') throw XMLParseException("expected >", p - s);
+                        if(*p != '>') throw XMLParseException("Expected >", p - s);
                         ++p;
                         handler.endElement(endName);
                         
                     } else {
                         
                         StringView8 endName(p, name.getLength());
-                        if(endName != name) throw XMLParseException("unmatch element type", p - s);
+                        if(endName != name) throw XMLParseException("Unmatch element type", p - s);
                         p += name.getLength();
                         Impl::Skipper<Impl::Space>::skip(p);
-                        if(*p != '>') throw XMLParseException("expected >", p - s);
+                        if(*p != '>') throw XMLParseException("Expected >", p - s);
                         ++p;
                         handler.endElement(endName);
                         
@@ -753,7 +753,7 @@ public:
                         p += 7;
                         parseDoctype<F>(handler);
                         
-                    } else throw XMLParseException("unexpected character", p - s);
+                    } else throw XMLParseException("Unexpected character", p - s);
                     
                 } else if(*p == '?') {
                     
@@ -766,7 +766,7 @@ public:
                     
                 }
                 
-            } else throw XMLParseException("expected <", p - s);
+            } else throw XMLParseException("Expected <", p - s);
             
         }
         
