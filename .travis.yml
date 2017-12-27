@@ -29,7 +29,7 @@ before_script:
 - git clone -q --branch=master https://github.com/SuperSodaSea/Corecat.git
 - cd Corecat
 - git checkout -fq master
-- cp -r include ../Textcat/include
+- cp -r include ../Textcat
 - cd ../Textcat
 - cmake -H. -Bbuild -DCMAKE_BUILD_TYPE=$CONFIG -DCMAKE_CXX_FLAGS=$FLAGS
 
