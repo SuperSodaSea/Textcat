@@ -161,10 +161,6 @@ public:
 
 class XMLDOMException : public Corecat::Util::Exception {
     
-private:
-    
-    using String8 = Corecat::Text::String8;
-    
 public:
     
     XMLDOMException(const String8& data) : Exception("XMLDOMException: " + data) {}

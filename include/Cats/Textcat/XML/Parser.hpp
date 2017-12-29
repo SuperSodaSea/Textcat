@@ -118,10 +118,6 @@ class XMLParseException : public Corecat::Util::Exception {
     
 private:
     
-    using String8 = Corecat::Text::String8;
-    
-private:
-    
     std::size_t pos;
     
 public:

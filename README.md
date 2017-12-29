@@ -1,6 +1,6 @@
 # Textcat: Text data formats library
 
-Textcat is a module of *The Cats Project*. It is designed to be a collection of parsers and serializers for various text data formats.
+Textcat is a module of *The Cats Project*. It is designed to process text data.
 
 CI | Status
 :---: | :---:
