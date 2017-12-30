@@ -1,6 +1,6 @@
-# Textcat: Text data formats library
+# Textcat: Text data processing library
 
-Textcat is a module of *The Cats Project*. It is designed to process text data.
+Textcat is a *The Cats Project* library for processing text data.
 
 CI | Status
 :---: | :---:
@@ -12,7 +12,7 @@ Currently supported format:
 + [XML](/doc/XML.md)
 
 
-## Licence
+## License
 
 [MIT License](/LICENSE.md)
 
