@@ -32,7 +32,7 @@
 
 #include "Cats/Textcat/XML.hpp"
 
-using namespace Cats::Textcat::XML;
+using namespace Cats::Textcat;
 
 void readFile(const char* name, std::vector<char>& data) {
     

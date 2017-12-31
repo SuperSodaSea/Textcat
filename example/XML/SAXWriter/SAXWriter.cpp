@@ -29,8 +29,8 @@
 #include "Cats/Corecat/Data/Stream.hpp"
 #include "Cats/Textcat/XML.hpp"
 
-using namespace Cats::Corecat::Data::Stream;
-using namespace Cats::Textcat::XML;
+using namespace Cats::Corecat;
+using namespace Cats::Textcat;
 
 int main() {
     

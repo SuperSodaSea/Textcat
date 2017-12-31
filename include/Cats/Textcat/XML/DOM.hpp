@@ -46,7 +46,7 @@
 
 namespace Cats {
 namespace Textcat{
-namespace XML {
+inline namespace XML {
 
 class XMLNode;
 class XMLElement;
@@ -159,7 +159,7 @@ public:
 }
 
 
-class XMLDOMException : public Corecat::Util::Exception {
+class XMLDOMException : public Corecat::Exception {
     
 public:
     
@@ -221,7 +221,7 @@ class XMLAttribute : public Impl::List<XMLAttribute>::ListElement {
     
 private:
     
-    using StringView8 = Corecat::Text::StringView8;
+    using StringView8 = Corecat::StringView8;
     
 private:
     
@@ -246,7 +246,7 @@ class XMLElement : public XMLNode {
     
 private:
     
-    using StringView8 = Corecat::Text::StringView8;
+    using StringView8 = Corecat::StringView8;
     
 private:
     
@@ -275,7 +275,7 @@ class XMLText : public XMLNode {
     
 private:
     
-    using StringView8 = Corecat::Text::StringView8;
+    using StringView8 = Corecat::StringView8;
     
 private:
     
@@ -296,7 +296,7 @@ class XMLCDATA : public XMLNode {
     
 private:
     
-    using StringView8 = Corecat::Text::StringView8;
+    using StringView8 = Corecat::StringView8;
     
 private:
     
@@ -317,7 +317,7 @@ class XMLComment : public XMLNode {
     
 private:
     
-    using StringView8 = Corecat::Text::StringView8;
+    using StringView8 = Corecat::StringView8;
     
 private:
     
@@ -338,7 +338,7 @@ class XMLProcessingInstruction : public XMLNode {
     
 private:
     
-    using StringView8 = Corecat::Text::StringView8;
+    using StringView8 = Corecat::StringView8;
     
 private:
     
@@ -364,9 +364,9 @@ class XMLDocument : public XMLNode {
 private:
     
     template <typename T>
-    using OutputStream = Corecat::Data::Stream::OutputStream<T>;
-    using StringView8 = Corecat::Text::StringView8;
-    using FastAllocator = Corecat::Util::FastAllocator<>;
+    using OutputStream = Corecat::OutputStream<T>;
+    using StringView8 = Corecat::StringView8;
+    using FastAllocator = Corecat::FastAllocator<>;
     
 private:
     
@@ -569,7 +569,7 @@ public:
 
 inline std::ostream& operator <<(std::ostream& stream, XMLDocument& document) {
     
-    auto wrapper = Corecat::Data::Stream::createWrapperOutputStream(stream);
+    auto wrapper = Corecat::createWrapperOutputStream(stream);
     document.serialize(wrapper);
     return stream;
     

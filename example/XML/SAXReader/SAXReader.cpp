@@ -32,8 +32,8 @@
 #include "Cats/Corecat/Text.hpp"
 #include "Cats/Textcat/XML.hpp"
 
-using namespace Cats::Corecat::Text;
-using namespace Cats::Textcat::XML;
+using namespace Cats::Corecat;
+using namespace Cats::Textcat;
 
 class Handler : public XMLHandlerBase {
     

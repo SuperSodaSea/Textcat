@@ -40,21 +40,21 @@
 
 namespace Cats {
 namespace Textcat{
-namespace XML {
+inline namespace XML {
 
 namespace Impl {
 
 template <typename T, T... V>
 struct Include {
     
-    static constexpr bool get(T t) { using namespace Corecat::Util::Sequence; return ContainSequence<Sequence<T, V...>>::get(t); }
+    static constexpr bool get(T t) { using namespace Corecat; return ContainSequence<Sequence<T, V...>>::get(t); }
     
 };
 
 template <typename T, T... V>
 struct Exclude {
     
-    static constexpr bool get(T t) { using namespace Corecat::Util::Sequence; return !ContainSequence<Sequence<T, V...>>::get(t); }
+    static constexpr bool get(T t) { using namespace Corecat; return !ContainSequence<Sequence<T, V...>>::get(t); }
     
 };
 
@@ -64,7 +64,7 @@ struct Skipper {
     
     static size_t skip(char*& p) {
         
-        using namespace Corecat::Util::Sequence;
+        using namespace Corecat;
         
         auto t = p;
         while(SequenceTable<MapperSequence<Cond, IndexSequence<unsigned char, 0, 255>>>::get(*t)) ++t;
@@ -114,7 +114,7 @@ struct Hexadecimal {
 }
 
 
-class XMLParseException : public Corecat::Util::Exception {
+class XMLParseException : public Corecat::Exception {
     
 private:
     
@@ -130,7 +130,7 @@ class XMLParser {
     
 private:
     
-    using StringView8 = Corecat::Text::StringView8;
+    using StringView8 = Corecat::StringView8;
     
 public:
     
@@ -166,7 +166,7 @@ private:
     template <Flag F>
     void parseReference(char*& q) {
         
-        using namespace Corecat::Util::Sequence;
+        using namespace Corecat::Util;
         
         switch(p[1]) {
         
@@ -279,7 +279,7 @@ private:
     template <Flag F, typename H>
     void parseXMLDeclaration(H& /*handler*/) {
         
-        using namespace Corecat::Util::Sequence;
+        using namespace Corecat::Util;
         
         Impl::Skipper<Impl::Space>::skip(p);
         
@@ -421,7 +421,7 @@ private:
     template <Flag F, typename H>
     void parseElement(H& handler) {
         
-        using namespace Corecat::Util::Sequence;
+        using namespace Corecat::Util;
         
         // Parse element type
         StringView8 name(p, 0);
@@ -703,7 +703,7 @@ public:
     template <Flag F = Flag::Default, typename H>
     void parse(char* data, H& handler) {
         
-        using namespace Corecat::Util::Sequence;
+        using namespace Corecat::Util;
         
         assert(data);
         

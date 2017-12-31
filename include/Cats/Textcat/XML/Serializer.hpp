@@ -41,15 +41,15 @@
 
 namespace Cats {
 namespace Textcat{
-namespace XML {
+inline namespace XML {
 
 class XMLSerializer : public XMLHandlerBase {
     
 private:
     
     template <typename T>
-    using OutputStream = Corecat::Data::Stream::OutputStream<T>;
-    using StringView8 = Corecat::Text::StringView8;
+    using OutputStream = Corecat::OutputStream<T>;
+    using StringView8 = Corecat::StringView8;
     
 private:
     

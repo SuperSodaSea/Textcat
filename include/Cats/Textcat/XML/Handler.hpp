@@ -33,13 +33,13 @@
 
 namespace Cats {
 namespace Textcat{
-namespace XML {
+inline namespace XML {
 
 class XMLHandlerBase {
     
 protected:
     
-    using StringView8 = Corecat::Text::StringView8;
+    using StringView8 = Corecat::StringView8;
     
 public:
     
