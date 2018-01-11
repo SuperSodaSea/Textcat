@@ -24,48 +24,47 @@
  *
  */
 
-#include <exception>
 #include <fstream>
 #include <iostream>
-#include <stdexcept>
 #include <vector>
 
 #include "Cats/Textcat/XML.hpp"
 
+using namespace Cats::Corecat;
 using namespace Cats::Textcat;
 
-void readFile(const char* name, std::vector<char>& data) {
+std::vector<char> readFile(const char* name) {
     
     std::ifstream is(name, std::ios::binary);
-    if(!is) throw std::runtime_error("can't read file");
+    if(!is) throw IOException("Cannot read file");
     is.seekg(0, std::ios::end);
     std::size_t size = static_cast<std::size_t>(is.tellg());
     is.seekg(0);
-    data.resize(size + 1);
+    std::vector<char> data(size + 1);
     is.read(data.data(), size);
     data[size] = 0;
+    return data;
     
 }
 
 int main(int argc, char** argv) {
     
-    if(argc < 2) {
-        
-        std::cout << "error: file name needed" << std::endl;
-        return 1;
-        
-    }
     try {
         
-        std::vector<char> data;
-        readFile(argv[1], data);
-        XMLDocument document;
-        document.parse<>(data.data());
-        std::cout << document << std::endl;
+        if(argc < 2) throw InvalidArgumentException("File name needed");
+        for(int i = 1; i < argc; ++i) {
+            
+            auto data = readFile(argv[i]);
+            XMLDocument document;
+            document.parse<>(data.data());
+            std::cout << document << std::endl;
+            
+        }
         
     } catch(std::exception& e) {
         
-        std::cout << "exception: " << e.what() << std::endl;
+        std::cerr << e.what() << std::endl;
+        return 1;
         
     }
     
