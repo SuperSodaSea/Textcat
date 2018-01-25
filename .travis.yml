@@ -4,34 +4,58 @@ sudo: required
 
 matrix:
   include:
-    - env: CONFIG=debug FLAGS="-m32"
-      compiler: gcc
-    - env: CONFIG=release FLAGS="-m32"
-      compiler: gcc
-    - env: CONFIG=debug FLAGS="-m64"
-      compiler: gcc
-    - env: CONFIG=release FLAGS="-m64"
-      compiler: gcc
-    - env: CONFIG=debug FLAGS="-m32"
-      compiler: clang
-    - env: CONFIG=release FLAGS="-m32"
-      compiler: clang
-    - env: CONFIG=debug FLAGS="-m64"
-      compiler: clang
-    - env: CONFIG=release FLAGS="-m64"
-      compiler: clang
+    - env: EVAL="CXX=g++-5" FLAGS="-m32" CONFIG=Debug
+      addons:
+        apt:
+          sources: ['ubuntu-toolchain-r-test']
+          packages: ['g++-5-multilib', 'lib32stdc++6', 'linux-libc-dev']
+    - env: EVAL="CXX=g++-5" FLAGS="-m32" CONFIG=Release
+      addons:
+        apt:
+          sources: ['ubuntu-toolchain-r-test']
+          packages: ['g++-5-multilib', 'lib32stdc++6', 'linux-libc-dev']
+    - env: EVAL="CXX=g++-5" FLAGS="-m64" CONFIG=Debug
+      addons:
+        apt:
+          sources: ['ubuntu-toolchain-r-test']
+          packages: ['g++-5']
+    - env: EVAL="CXX=g++-5" FLAGS="-m64" CONFIG=Release
+      addons:
+        apt:
+          sources: ['ubuntu-toolchain-r-test']
+          packages: ['g++-5']
+    - env: EVAL="CXX=clang++" FLAGS="-m32" CONFIG=Debug
+      addons:
+        apt:
+          sources: ['ubuntu-toolchain-r-test']
+          packages: ['g++-5-multilib', 'lib32stdc++6', 'linux-libc-dev']
+    - env: EVAL="CXX=clang++" FLAGS="-m32" CONFIG=Release
+      addons:
+        apt:
+          sources: ['ubuntu-toolchain-r-test']
+          packages: ['g++-5-multilib', 'lib32stdc++6', 'linux-libc-dev']
+    - env: EVAL="CXX=clang++" FLAGS="-m64" CONFIG=Debug
+      addons:
+        apt:
+          sources: ['ubuntu-toolchain-r-test']
+          packages: ['g++-5']
+    - env: EVAL="CXX=clang++" FLAGS="-m64" CONFIG=Release
+      addons:
+        apt:
+          sources: ['ubuntu-toolchain-r-test']
+          packages: ['g++-5']
 
 before_script:
-- sudo apt-add-repository -y ppa:ubuntu-toolchain-r/test
-- sudo apt-get update -qq
-- sudo apt-get install -y g++-multilib lib32stdc++6 libc6-dev-i386
+- sudo ln -s /usr/include/asm-generic /usr/include/asm
+- eval "${EVAL}"
+- $CXX -v
 - cd ..
 - git clone -q --branch=master https://github.com/SuperSodaSea/Corecat.git
 - cd Corecat
 - git checkout -fq master
 - cp -r include ../Textcat
 - cd ../Textcat
-- cmake -H. -Bbuild -DCMAKE_BUILD_TYPE=$CONFIG -DCMAKE_CXX_FLAGS=$FLAGS
+- cmake -H. -Bbuild -DCMAKE_CXX_COMPILER=$CXX -DCMAKE_CXX_FLAGS=$FLAGS -DCMAKE_BUILD_TYPE=$CONFIG
 
 script:
 - make -C build

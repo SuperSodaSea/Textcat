@@ -67,7 +67,7 @@ struct Skipper {
         using namespace Corecat;
         
         auto t = p;
-        while(SequenceTable<MapperSequence<Cond, IndexSequence<unsigned char, 0, 255>>>::get(*t)) ++t;
+        while(SequenceTable<MapperSequence<Cond, IndexSequence<int, 0, 256>>>::get(*t)) ++t;
         const size_t length = t - p;
         p = t;
         return length;
@@ -178,7 +178,7 @@ private:
                 p += 3;
                 if(*p == ';') throw XMLParseException("Unexpected ;", p - s);
                 std::uint32_t code = 0;
-                for(unsigned char t; (t = SequenceTable<MapperSequence<Impl::Hexadecimal, IndexSequence<unsigned char, 0, 255>>>::get(*p)) != 255; code = code * 16 + t, ++p);
+                for(unsigned char t; (t = SequenceTable<MapperSequence<Impl::Hexadecimal, IndexSequence<int, 0, 256>>>::get(*p)) != 255; code = code * 16 + t, ++p);
                 if(*p != ';') throw XMLParseException("Expected ;", p - s);
                 ++p;
                 // TODO: Code conversion
@@ -190,7 +190,7 @@ private:
                 p += 2;
                 if(*p == ';') throw XMLParseException("Unexpected ;", p - s);
                 std::uint32_t code = 0;
-                for(unsigned char t; (t = SequenceTable<MapperSequence<Impl::Decimal, IndexSequence<unsigned char, 0, 255>>>::get(*p)) != 255; code = code * 10 + t, ++p);
+                for(unsigned char t; (t = SequenceTable<MapperSequence<Impl::Decimal, IndexSequence<int, 0, 256>>>::get(*p)) != 255; code = code * 10 + t, ++p);
                 if(*p != ';') throw XMLParseException("Expected ;", p - s);
                 ++p;
                 // TODO: Code conversion
@@ -306,7 +306,7 @@ private:
         } else throw XMLParseException("Expected \" or '", p - s);
         ++p;
         
-        if(*p != '?' && !SequenceTable<MapperSequence<Impl::Space, IndexSequence<unsigned char, 0, 255>>>::get(*p))
+        if(*p != '?' && !SequenceTable<MapperSequence<Impl::Space, IndexSequence<int, 0, 256>>>::get(*p))
             throw XMLParseException("Unexpected character", p - s);
         Impl::Skipper<Impl::Space>::skip(p);
         
@@ -335,7 +335,7 @@ private:
             
         }
         
-        if(*p != '?' && !SequenceTable<MapperSequence<Impl::Space, IndexSequence<unsigned char, 0, 255>>>::get(*p))
+        if(*p != '?' && !SequenceTable<MapperSequence<Impl::Space, IndexSequence<int, 0, 256>>>::get(*p))
             throw XMLParseException("Unexpected character", p - s);
         Impl::Skipper<Impl::Space>::skip(p);
         
@@ -445,7 +445,7 @@ private:
             ++p;
             handler.startElement(name);
             Impl::Skipper<Impl::Space>::skip(p);
-            while(SequenceTable<MapperSequence<Impl::AttributeName, IndexSequence<unsigned char, 0, 255>>>::get(*p)) {
+            while(SequenceTable<MapperSequence<Impl::AttributeName, IndexSequence<int, 0, 256>>>::get(*p)) {
                 
                 // Parse attribute name
                 StringView8 name(p, 0);
@@ -577,7 +577,7 @@ private:
                             }
                             --q;
                             if(F & Flag::TrimSpace)
-                                for(; SequenceTable<MapperSequence<Impl::Space, IndexSequence<unsigned char, 0, 255>>>::get(*q); --q);
+                                for(; SequenceTable<MapperSequence<Impl::Space, IndexSequence<int, 0, 256>>>::get(*q); --q);
                             ++q;
                             text.setLength(q - text.getData());
                             handler.text(text);
@@ -602,7 +602,7 @@ private:
                             }
                             --q;
                             if(F & Flag::TrimSpace)
-                                for(; SequenceTable<MapperSequence<Impl::Space, IndexSequence<unsigned char, 0, 255>>>::get(*q); --q);
+                                for(; SequenceTable<MapperSequence<Impl::Space, IndexSequence<int, 0, 256>>>::get(*q); --q);
                             ++q;
                             text.setLength(q - text.getData());
                             handler.text(text);
@@ -614,7 +614,7 @@ private:
                             if(*p == 0) throw XMLParseException("Unexpected end of data", p - s);
                             auto q = p - 1;
                             if(F & Flag::TrimSpace)
-                                for(; SequenceTable<MapperSequence<Impl::Space, IndexSequence<unsigned char, 0, 255>>>::get(*q); --q);
+                                for(; SequenceTable<MapperSequence<Impl::Space, IndexSequence<int, 0, 256>>>::get(*q); --q);
                             ++q;
                             text.setLength(q - text.getData());
                             handler.text(text);
@@ -721,7 +721,7 @@ public:
         }
         
         // Parse XML declaration
-        if(p[0] == '<' && p[1] == '?' && p[2] == 'x' && p[3] == 'm' && p[4] == 'l' && SequenceTable<MapperSequence<Impl::Space, IndexSequence<unsigned char, 0, 255>>>::get(p[5])) {
+        if(p[0] == '<' && p[1] == '?' && p[2] == 'x' && p[3] == 'm' && p[4] == 'l' && SequenceTable<MapperSequence<Impl::Space, IndexSequence<int, 0, 256>>>::get(p[5])) {
             
             // "<?xml "
             p += 6;

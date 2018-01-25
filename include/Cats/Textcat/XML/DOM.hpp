@@ -490,10 +490,10 @@ public:
         
     }
     
-    void serialize(OutputStream<char>& stream) {
+    template <typename H>
+    void visit(H& handler) {
         
-        XMLSerializer serializer(stream);
-        serializer.startDocument();
+        handler.startDocument();
         if(hasChildNodes()) {
             
             XMLNode* cur = &getFirstChild();
@@ -504,14 +504,11 @@ public:
                 case XMLNodeType::Element: {
                     
                     auto& element = static_cast<XMLElement&>(*cur);
-                    serializer.startElement(element.getName());
-                    for(auto& attr : element.attribute()) {
-                        
-                        serializer.attribute(attr.getName(), attr.getValue());
-                        
-                    }
+                    handler.startElement(element.getName());
+                    for(auto& attr : element.attribute())
+                        handler.attribute(attr.getName(), attr.getValue());
                     bool empty = !cur->hasChildNodes();
-                    serializer.endAttributes(empty);
+                    handler.endAttributes(empty);
                     if(!empty) { cur = &cur->getFirstChild(); continue; }
                     break;
                     
@@ -519,28 +516,28 @@ public:
                 case XMLNodeType::Text: {
                     
                     auto& text = static_cast<XMLText&>(*cur);
-                    serializer.text(text.getValue());
+                    handler.text(text.getValue());
                     break;
                     
                 }
                 case XMLNodeType::CDATA: {
                     
                     auto& cdata = static_cast<XMLCDATA&>(*cur);
-                    serializer.cdata(cdata.getValue());
+                    handler.cdata(cdata.getValue());
                     break;
                     
                 }
                 case XMLNodeType::Comment: {
                     
                     auto& comment = static_cast<XMLComment&>(*cur);
-                    serializer.comment(comment.getValue());
+                    handler.comment(comment.getValue());
                     break;
                     
                 }
                 case XMLNodeType::ProcessingInstruction: {
                     
                     auto& pi = static_cast<XMLProcessingInstruction&>(*cur);
-                    serializer.processingInstruction(pi.getName(), pi.getValue());
+                    handler.processingInstruction(pi.getName(), pi.getValue());
                     break;
                     
                 }
@@ -552,7 +549,7 @@ public:
                     cur = cur->parent;
                     if(cur == this) break;
                     auto name = static_cast<XMLElement*>(cur)->getName();
-                    serializer.endElement(name);
+                    handler.endElement(name);
                     
                 }
                 if(cur == this) break;
@@ -561,7 +558,13 @@ public:
             }
             
         }
-        serializer.endDocument();
+        handler.endDocument();
+        
+    }
+    void serialize(OutputStream<char>& stream) {
+        
+        XMLSerializer serializer(stream);
+        visit(serializer);
         
     }
     

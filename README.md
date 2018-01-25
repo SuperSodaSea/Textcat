@@ -19,7 +19,7 @@ Currently supported format:
 
 ## Requirement
 
-+ C++11
++ C++14
 + [Corecat][Corecat]
 
 
