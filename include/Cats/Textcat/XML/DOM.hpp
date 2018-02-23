@@ -85,6 +85,8 @@ public:
         Iterator(List* list_, ListElement* p_) : list(list_), p(p_) {}
         Iterator(const Iterator& src) : list(src.list), p(src.p) {}
         
+        Iterator& operator =(const Iterator& src) { list = src.list, p = src.p; return *this; }
+        
         T& operator *() const { return static_cast<T&>(*p); }
         T* operator ->() const { return static_cast<T*>(p); }
         bool operator ==(const Iterator& it) { return p == it.p; }

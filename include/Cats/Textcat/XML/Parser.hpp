@@ -378,7 +378,7 @@ private:
     template <Flag F, typename H>
     void parseComment(H& handler) {
         
-        StringView8 comment(p, 0);
+        StringView8 comment(p, 1);
         // Until "-->"
         while(*p && (p[0] != '-' || p[1] != '-' || p[2] != '>')) ++p;
         if(!*p) throw XMLParseException("Unexpected end of data", p - s);
@@ -390,13 +390,13 @@ private:
     template <Flag F, typename H>
     void parseProcessingInstruction(H& handler) {
         
-        StringView8 target(p, 0);
+        StringView8 target(p, 1);
         target.setLength(Impl::Skipper<Impl::Name>::skip(p));
         if(!target.getLength()) throw XMLParseException("Expected PI target", p - s);
         if((p[0] != '?' || p[1] != '>') && !Impl::Skipper<Impl::Space>::skip(p))
             throw XMLParseException("Expected white space", p - s);
         
-        StringView8 content(p, 0);
+        StringView8 content(p, 1);
         // Until "?>"
         while(*p && (p[0] != '?' || p[1] != '>')) ++p;
         if(!*p) throw XMLParseException("Unexpected end of data", p - s);
@@ -409,7 +409,7 @@ private:
     template <Flag F, typename H>
     void parseCDATA(H& handler) {
         
-        StringView8 text(p, 0);
+        StringView8 text(p, 1);
         // Until "]]>"
         while(*p && (p[0] != ']' || p[1] != ']' || p[2] != '>')) ++p;
         if(!*p) throw XMLParseException("Unexpected end of data", p - s);
@@ -424,7 +424,7 @@ private:
         using namespace Corecat::Util;
         
         // Parse element type
-        StringView8 name(p, 0);
+        StringView8 name(p, 1);
         name.setLength(Impl::Skipper<Impl::Name>::skip(p));
         if(!name.getLength()) throw XMLParseException("Expected element type", p - s);
         bool empty = false;
@@ -448,7 +448,7 @@ private:
             while(SequenceTable<MapperSequence<Impl::AttributeName, IndexSequence<int, 0, 256>>>::get(*p)) {
                 
                 // Parse attribute name
-                StringView8 name(p, 0);
+                StringView8 name(p, 1);
                 name.setLength(Impl::Skipper<Impl::AttributeName>::skip(p));
                 if(!name.getLength()) throw XMLParseException("Expected attribute name", p - s);
                 Impl::Skipper<Impl::Space>::skip(p);
@@ -544,7 +544,7 @@ private:
                         
                         if(F & Flag::NormalizeSpace) {
                             
-                            StringView8 text(p, 0);
+                            StringView8 text(p, 1);
                             auto q = p;
                             while(true) {
                                 
@@ -563,7 +563,7 @@ private:
                             
                         } else {
                             
-                            StringView8 text(p, 0);
+                            StringView8 text(p, 1);
                             auto q = p;
                             while(true) {
                                 
@@ -588,7 +588,7 @@ private:
                         
                         if(F & Flag::NormalizeSpace) {
                             
-                            StringView8 text(p, 0);
+                            StringView8 text(p, 1);
                             auto q = p;
                             while(true) {
                                 
@@ -609,7 +609,7 @@ private:
                             
                         } else {
                             
-                            StringView8 text(p, 0);
+                            StringView8 text(p, 1);
                             Impl::Skipper<Impl::Text>::skip(p);
                             if(*p == 0) throw XMLParseException("Unexpected end of data", p - s);
                             auto q = p - 1;
@@ -651,7 +651,7 @@ private:
                     ++p;
                     if(F & Flag::ClosingTagValidate) {
                     
-                        StringView8 endName(p, 0);
+                        StringView8 endName(p, 1);
                         Impl::Skipper<Impl::Name>::skip(p);
                         endName.setLength(p - endName.getData());
                         Impl::Skipper<Impl::Space>::skip(p);
