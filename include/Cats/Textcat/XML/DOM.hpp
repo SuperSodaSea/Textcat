@@ -34,9 +34,9 @@
 #include <new>
 #include <iostream>
 
+#include "Cats/Corecat/Data/Allocator/FastAllocator.hpp"
 #include "Cats/Corecat/Data/Stream.hpp"
 #include "Cats/Corecat/Text/String.hpp"
-#include "Cats/Corecat/Util/Allocator.hpp"
 #include "Cats/Corecat/Util/Exception.hpp"
 
 #include "Handler.hpp"
