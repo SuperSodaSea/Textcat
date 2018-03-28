@@ -32,7 +32,6 @@
 #include "XML/Handler.hpp"
 #include "XML/Parser.hpp"
 #include "XML/Serializer.hpp"
-#include "XML/XPath.hpp"
 
 
 #endif
