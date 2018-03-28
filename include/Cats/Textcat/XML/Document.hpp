@@ -24,8 +24,8 @@
  *
  */
 
-#ifndef CATS_TEXTCAT_XML_DOM_HPP
-#define CATS_TEXTCAT_XML_DOM_HPP
+#ifndef CATS_TEXTCAT_XML_DOCUMENT_HPP
+#define CATS_TEXTCAT_XML_DOCUMENT_HPP
 
 
 #include <cassert>

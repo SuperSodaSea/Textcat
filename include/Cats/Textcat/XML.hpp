@@ -28,10 +28,11 @@
 #define CATS_TEXTCAT_XML_HPP
 
 
-#include "XML/DOM.hpp"
+#include "XML/Document.hpp"
 #include "XML/Handler.hpp"
 #include "XML/Parser.hpp"
 #include "XML/Serializer.hpp"
+#include "XML/XPath.hpp"
 
 
 #endif
