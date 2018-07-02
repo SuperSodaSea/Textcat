@@ -92,9 +92,9 @@ public:
     
 };
 
-std::vector<char> readFile(const char* name) {
+std::vector<char> readFile(const char* path) {
     
-    std::ifstream is(name, std::ios::binary);
+    std::ifstream is(path, std::ios::binary);
     if(!is) throw IOException("Cannot read file");
     is.seekg(0, std::ios::end);
     std::size_t size = static_cast<std::size_t>(is.tellg());
